@@ -1,3 +1,8 @@
+"""Address class"""
+
+__author__ = "Zack Snyder"
+__date__ = "1/10/2019"
+
 import uuid
 
 class Address(object):

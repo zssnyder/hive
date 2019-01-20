@@ -1,3 +1,7 @@
+"""Connection class plugin interface"""
+
+__author__ = "Zack Snyder"
+__date__ = "1/10/2019"
 
 class Connection(object):
     """Defines the lowest level radio connection interface. 

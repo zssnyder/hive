@@ -1,5 +1,9 @@
 """Handler for receiving messages in the Hive mesh network"""
 
+__author__ = "Zack Snyder"
+__date__ = "1/10/2019"
+
+
 from network import Network
 from connection import Connection
 from address import Address
