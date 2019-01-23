@@ -6,7 +6,7 @@ __date__ = "1/10/2019"
 from address import Address
 from route import Route
 
-class Network(object):
+class Network():
     """Network class describing network topology
     
     Stores network configuration in network table

@@ -5,7 +5,7 @@ __date__ = "1/10/2019"
 
 from address import Address
 
-class Route(object):
+class Route():
     """Route class defines message path"""
 
     def __init__(self, source, next, dest):
@@ -22,4 +22,4 @@ class Route(object):
 
     def get_path(self):
         """Returns the route path to be prefixed to messages"""
-        return self.source.id + "///" + self.dest.id + "///"
+        return self.next.id + "///" + self.dest.id + "///" + self.source.id + "///"

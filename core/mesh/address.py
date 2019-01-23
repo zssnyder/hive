@@ -5,7 +5,7 @@ __date__ = "1/10/2019"
 
 import uuid
 
-class Address(object):
+class Address():
     """Node class describing network entity""" 
 
     def __init__(self, id=""):
