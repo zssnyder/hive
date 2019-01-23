@@ -1,0 +1,3 @@
+# Hive - a Swarming Drone Framework
+
+More information coming soon...
