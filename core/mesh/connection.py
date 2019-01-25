@@ -15,14 +15,15 @@ class Connection():
     * read()
     """
 
-    def __init__(self, baud, protocol):
+    def __init__(self):
         """Initialize instance of connection
 
         * baud - radio baud rate
         * protocol - string identifier 'UART', 'I2C', 'SPI'
         """
-        self.baud = baud
-        self.protocol = protocol
+        # self.baud = baud
+        # self.protocol = protocol
+        pass
 
     def open(self):
         """Opens connection to mesh network"""
