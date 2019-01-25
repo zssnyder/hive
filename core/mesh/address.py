@@ -8,10 +8,10 @@ import uuid
 class Address():
     """Node class describing network entity""" 
 
-    def __init__(self, id=""):
+    def __init__(self, id=None):
         """Initialize instance of address class"""
 
-        if (id != ""):
+        if id is not None:
             self.id = id
         else: 
             self.id = uuid.uuid4() # Initialize unique address
@@ -21,4 +21,10 @@ class Address():
         """Overrides equatable relation"""
         if isinstance(other, Address):
             return self.id == other.id
+        return False
+    
+    def __ne__(self, other):
+        """Overrides not equatable relation"""
+        if isinstance(other, Address):
+            return self.id != other.id
         return False
