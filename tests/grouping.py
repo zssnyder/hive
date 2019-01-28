@@ -4,6 +4,9 @@ __date__ = "1/25/19"
 import thread
 import time
 
+run_time = 5
+max_nodes_per_group = 2
+
 signal_strength_table = {
     1: {1:0,    2:5,    3:3.5,  4:4,    5:4,    6:7,    7:5.5},
     2: {1:5,    2:0,    3:5,    4:6.5,  5:10,   6:6.5,  7:4.5},
@@ -16,56 +19,74 @@ signal_strength_table = {
 
 class Group():
 
-    def __init__(self, node_id, values=None, dictionary=None):
+    def all_nodes(self):
+        return self._all_nodes
+    
+    def all_dict(self):
+        return self._node_dict
+
+    def description(self):
+        return {node: self._node_dict[node] for node in self.nodes}
+
+    def score(self):
+        return reduce(lambda x,y: x+y, self._node_dict.values()) / len(self.all_nodes())
+
+    def __init__(self, node_id, dictionary=dict(), max_size=0):
 
         self.node_id = node_id
-        self.nodes = []
+        self._node_dict = dictionary
+        self.max_size = max_size
 
-        for value in values:
-            for key, v in dictionary.items():
-                if value == v and key not in self.nodes:
-                    self.nodes.append(key)
-                    break
+        # _nodes contains a list of node addresses ordered by shortest distance
+        self._all_nodes = list(node for node, value in sorted(dictionary.items(), key=lambda kv: kv[1]) )
+        self.nodes = [self.node_id]
 
     def merge(self, group):
-        if self.node_id in group.nodes:
-            for node in reversed(self.nodes):
-                # print(node)
-                if node not in group.nodes:
-                    # print("Node not found")
-                    self.nodes.remove(node)
-        else: pass
-            # self.nodes.remove(group.node_id)
 
-def create_group(node, divisor):
-    sorted_strengths = sorted(signal_strength_table[node].values()) # list(map(dict.itervalues, signal_strengths))
-    # print(sorted_strengths)
+        other_score = self.all_dict()[group.node_id]
 
-    current_group = Group(node, sorted_strengths[:len(sorted_strengths)//divisor], signal_strength_table[node])
-    # print(group_1.nodes)
+        if other_score <= self.score():
+            if self.node_id in group.all_nodes():
+                if group.node_id not in self.nodes and len(self.nodes) < self.max_size:
+                    self.nodes.append(group.node_id)
+                if len(group.all_nodes()) < self.max_size:
+                    self.max_size = len(group.all_nodes())
+                    self.nodes = self.nodes[:self.max_size]
+            elif group.node_id in self.nodes:
+                self.nodes.remove(group.node_id)
 
-    while True: 
-        for n in current_group.nodes:
-            # print(n)
+        
+                
+
+def create_group(node, max_nodes):
+
+    current_group = Group(node, signal_strength_table[node], max_nodes)
+    t_end = time.time() + run_time
+    while time.time() < t_end: 
+
+        # Make a copy of the group structure before changes
+        # before = signal_strength_table.copy()
+
+        # Merge group with other groups nearby
+        for n in current_group.all_nodes()[:max_nodes + 1]:
             if n != node: 
-                n_sorted_strengths = sorted(signal_strength_table[n].values())
-                # print(n_sorted_strengths)
-                neighbor_group = Group(n, n_sorted_strengths, signal_strength_table[n])
-                # print(group_3.nodes)
+                neighbor_group = Group(n, signal_strength_table[n], max_nodes)
                 current_group.merge(neighbor_group)
-                # print(group_1.nodes)
+            
 
-        for k, v in signal_strength_table[node].items(): 
-            if k not in current_group.nodes: 
-                signal_strength_table[node].pop(k, v)
-                # print("Popped " + str(k) + " from Node " + str(node))
+        # Update global storage
+        signal_strength_table[node] = current_group.description()
+        # Print resulting group
         print(str(node) + ": " + str(current_group.nodes))
+        time.sleep(0.2)
 
-        time.sleep(1)
 
 for node, _ in signal_strength_table.items():
-    num_of_groups = len(signal_strength_table) // 2
-    thread.start_new_thread(create_group, (node, 2))
-
-while True: pass
+    thread.start_new_thread(create_group, (node, max_nodes_per_group,))
+    # time.sleep(0.1)
     # break
+
+t2_end = time.time() + run_time
+while time.time() < t2_end: pass
+
+print(signal_strength_table)
