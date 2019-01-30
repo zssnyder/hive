@@ -4,7 +4,7 @@ __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
 from address import Address
-from route import Route
+from group import Group
 
 class Network():
     """Network class describing network topology
@@ -12,27 +12,25 @@ class Network():
     Stores network configuration in network table
     """
 
-    def __init__(self, routes=[]):
+    def __init__(self, groups=dict()):
         """Initialize instance of the network
 
-        * group - network biases group nodes in network table !!!! How to optimize groups?
+        * groups - dictionary of (node address, group object)
         """
-        self.routes = routes
+        self.groups = groups
 
 
-    def add_route(self, route):
-        """Add new route to network"""
-        self.routes.append(route)
+    def set_group(self, address, group):
+        """Add new group to network"""
+        self.groups[address] = group
 
-    def get_route(self, dest):
+    def get_group(self, address):
         """Get route for destination address"""
-        for route in self.routes:
-            if route.dest == dest:
-                return route
+        return self.groups[address]
     
-    def get_next(self, dest):
-        """Get next address in path to dest"""
-        for route in self.routes:
-            if route.dest == dest:
-                return route.next
+    # def get_next(self, dest):
+    #     """Get next address in path to dest"""
+    #     for route in self.routes:
+    #         if route.dest == dest:
+    #             return route.next
 

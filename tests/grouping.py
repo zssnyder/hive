@@ -4,7 +4,7 @@ __date__ = "1/25/19"
 import thread
 import time
 
-run_time = 5
+run_time = 1
 max_nodes_per_group = 2
 
 signal_strength_table = {
@@ -65,7 +65,7 @@ def create_group(node, max_nodes):
     while time.time() < t_end: 
 
         # Make a copy of the group structure before changes
-        # before = signal_strength_table.copy()
+        before = signal_strength_table.copy()
 
         # Merge group with other groups nearby
         for n in current_group.all_nodes()[:max_nodes + 1]:
@@ -79,6 +79,9 @@ def create_group(node, max_nodes):
         # Print resulting group
         print(str(node) + ": " + str(current_group.nodes))
         time.sleep(0.2)
+
+        after = signal_strength_table
+        if before == after: break
 
 
 for node, _ in signal_strength_table.items():
