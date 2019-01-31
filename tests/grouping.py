@@ -28,9 +28,6 @@ class Group():
     def description(self):
         return {node: self._node_dict[node] for node in self.nodes}
 
-    def score(self):
-        return reduce(lambda x,y: x+y, self._node_dict.values()) / len(self.all_nodes())
-
     def __init__(self, node_id, dictionary=dict(), max_size=0):
 
         self.node_id = node_id
@@ -43,20 +40,17 @@ class Group():
 
     def merge(self, group):
 
-        other_score = self.all_dict()[group.node_id]
+        if self.node_id in group.all_nodes()[:self.max_size + 1]:
+            if group.node_id not in self.nodes: 
+                self.nodes.append(group.node_id)
+            if len(group.all_nodes()) < self.max_size:
+                self.max_size = len(group.all_nodes())
+                self.nodes = self.nodes[:self.max_size]
+        elif group.node_id in self.nodes:
+            self.nodes.remove(group.node_id)
 
-        if other_score <= self.score():
-            if self.node_id in group.all_nodes():
-                if group.node_id not in self.nodes and len(self.nodes) < self.max_size:
-                    self.nodes.append(group.node_id)
-                if len(group.all_nodes()) < self.max_size:
-                    self.max_size = len(group.all_nodes())
-                    self.nodes = self.nodes[:self.max_size]
-            elif group.node_id in self.nodes:
-                self.nodes.remove(group.node_id)
+        self.nodes = self.nodes[:self.max_size]
 
-        
-                
 
 def create_group(node, max_nodes):
 
@@ -68,7 +62,7 @@ def create_group(node, max_nodes):
         before = signal_strength_table.copy()
 
         # Merge group with other groups nearby
-        for n in current_group.all_nodes()[:max_nodes + 1]:
+        for n in current_group.all_nodes()[:current_group.max_size + 1]:
             if n != node: 
                 neighbor_group = Group(n, signal_strength_table[n], max_nodes)
                 current_group.merge(neighbor_group)
