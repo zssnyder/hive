@@ -115,12 +115,12 @@ sudo reboot
 ## ArduPilot Setup
 
 Now we will configure the BeagleBone Blue for use with ardupilot.
-#### 1. Create the ArduPilot environment configuration file, /etc/default/ardupilot.
+#### 1. Create the ArduPilot environment configuration file.
 ```bash
 sudo vim /etc/default/ardupilot
-
-OR
-
+```
+Or:
+```
 sudoedit /ect/default/ardupilot
 ```
 Then paste into the file your configuration values and save. Below is an example of a valid configuration.
@@ -204,7 +204,7 @@ RestartSec=1
 WantedBy=multi-user.target
 ```
 
-* **AntennaTracker** `/lib/systemd/system/antennatracker.service`
+* **AntennaTracker** */lib/systemd/system/antennatracker.service*
 
 ```bash
 [Unit]
@@ -229,7 +229,7 @@ WantedBy=multi-user.target
 ```bash
 sudo mkdir -p /usr/bin/ardupilot
 ```
-Then we need to create the file at  `/usr/bin/ardupilot/aphw`
+Create the hardware configuration file: */usr/bin/ardupilot/aphw*
 ```
 #!/bin/bash
 # aphw
