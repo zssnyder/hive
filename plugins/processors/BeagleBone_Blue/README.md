@@ -10,4 +10,21 @@ Flash the Debian image to a microSD card using Etcher (https://etcher.io). Then 
 
 ### 2. Connect to the BeagleBone Blue
 
-If you have not connected the BeagleBone Blue to your computer via microUSB, do so now. Lights on the board should start flashing. Once LED 0 begins flashing in a heartbeat pattern
+If you have not connected the BeagleBone Blue to your computer via microUSB, do so now. Lights on the board should start flashing. Once LED 0 begins flashing in a heartbeat pattern, the board is ready for ssh.
+
+SSH into your BeagleBone Blue
+
+**For MacOS and Linux**
+```
+ssh debian@192.168.6.2
+```
+
+**For Windows**
+
+Use PuTTY to connect to **192.168.7.2**. 
+
+#### Credentials: 
+
+* Username: debian
+* Password: temppwd
+
