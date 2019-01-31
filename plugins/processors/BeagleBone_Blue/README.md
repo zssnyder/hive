@@ -14,8 +14,8 @@ If you have not connected the BeagleBone Blue to your computer via microUSB, do 
 
 Now we will log into the BeagleBone Blue via SSH. The default username and password are:
 
-    * Username: debian
-    * Password: temppwd
+* Username: **debian**
+* Password: **temppwd**
 
 ----
 
