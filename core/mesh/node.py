@@ -22,12 +22,12 @@ class Node():
         # Group
         self.group = group
         if group is None:
-            self.group = Group(None, address, [])
+            self.group = Group(id=None, controller=address, distances={address: 0}, max_size=0)
         
         # Network
         self.network = network
         if network is None:
-            self.network = Network()
+            self.network = Network(groups={address: self.group})
         
         # Connection
         self.connection = connection
@@ -37,7 +37,7 @@ class Node():
         # Dictionary of sent messages waiting for an ack
         # Key: Message identifier
         # Value: 
-        self.waiting_for_ack = dict()
+        # self.waiting_for_ack = dict()
 
     def connect(self):
         """Connect node to group network"""
