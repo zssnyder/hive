@@ -254,7 +254,7 @@ cd ~/
 mkdir ArduCopter
 cd ArduCopter/
 wget http://bbbmini.org/download/blue/ArduCopter/arducopter-3_5_4
-cp arducopter-3_5_4 /usr/bin/ardupilot/
+sudo cp arducopter-3_5_4 /usr/bin/ardupilot/
 ```
 * **ArduPlane** (http://bbbmini.org/download/blue/ArduPlane/)
 ```bash
@@ -262,7 +262,7 @@ cd ~/
 mkdir ArduPlane
 cd ArduPlane/
 wget http://bbbmini.org/download/blue/ArduPlane/arduplane-3_8_3
-cp arduplane-3_8_3 /usr/bin/ardupilot/
+sudo cp arduplane-3_8_3 /usr/bin/ardupilot/
 ```
 * **ArduRover** (http://bbbmini.org/download/blue/ArduRover/)
 ```bash
@@ -270,7 +270,7 @@ cd ~/
 mkdir ArduRover
 cd ArduRover/
 wget http://bbbmini.org/download/blue/ArduRover/ardurover
-cp ardurover /usr/bin/ardupilot/
+sudo cp ardurover /usr/bin/ardupilot/
 ```
 Once downloaded and copied to the `/usr/bin/ardupilot` directory, make sure to set proper permissions: 
 ```
