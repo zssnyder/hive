@@ -11,28 +11,22 @@ from transmit import broadcast, transmit, beam, ping
 class Node():
     """Node class defines and handles all network interactions among nodes in the network"""
 
-    def __init__(self, address=None, group=None, network=None, connection=None):
+    def __init__(self, address=Address(), group=Group(), network=Network(), connection=Connection()):
         """Initialize instance of Node class"""
         
         # Address
         self.address = address
-        if address is None:
-            self.address = Address()
         
         # Group
         self.group = group
-        if group is None:
-            self.group = Group(id=None, controller=address, distances={address: 0}, max_size=0)
         
         # Network
         self.network = network
-        if network is None:
-            self.network = Network(groups={address: self.group})
-        
+        self.network.add_signal(self.address, 0)
+        self.network.add_group(self.address, self.group)
+
         # Connection
         self.connection = connection
-        if connection is None:
-            self.connection = Connection()
         
         # Dictionary of sent messages waiting for an ack
         # Key: Message identifier

@@ -7,7 +7,7 @@ from uuid import uuid4
 class Group():
     """Group class desribing logical grouping of nodes in network"""
 
-    def __init__(self, id=None, controller=None, distances=dict(), max_size=0):
+    def __init__(self, id=None, controller=None, network=None, max_size=0):
         """Initialize Group class
 
         * addresses: list of node addresses in group
@@ -20,9 +20,9 @@ class Group():
         
         self.controller = controller
         # Dictionary of address: distance key-value pairs
-        self.distances = dict(distances)
+        # self.distances = dict(distances)
         # Address of all nodes in group
-        self.addresses = [address for address, _ in sorted(self.distances.items(), lambda kv: kv[1])]
+        self.addresses = [address for address, _ in sorted(network.signals.items(), lambda kv: kv[1])]
         # Distances between current node and other nodes
         # self.distances = [distance for address, distance in self.nodes]
         # Maximum size of a group
@@ -40,11 +40,17 @@ class Group():
         # Reduce size of group to max size
         self.addresses = self.addresses[:self.max_size]
 
-    def add(self, address, distance):
+    def add(self, address, network):
         """Add an address to the group"""
-        self.distances[address] = distance
+        if address in network.signals.keys():
+            # Sort addresses by signal appended with new address
+            self.addresses = sorted(self.addresses + address, lambda key: network.signals[key])
+            return True
+        return False
 
     def remove(self, address):
         """Remove an address from the group"""
-        if address in self.distances: del self.distances[address]
-        if address in self.addresses: self.addresses.remove(address)
+        if address in self.addresses: 
+            self.addresses.remove(address)
+            return True
+        return False

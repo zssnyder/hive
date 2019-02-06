@@ -12,22 +12,39 @@ class Network():
     Stores network configuration in network table
     """
 
-    def __init__(self, groups=dict()):
+    def __init__(self, signals=dict(), groups=dict()):
         """Initialize instance of the network
 
-        * groups - dictionary of (node address, group object)
+        * signals - dictionary of [node address: RSSI strength]
+        * groups - dictionary of [node address, group]
         """
+        self.signals = signals
         self.groups = groups
 
+    ### Signals ###
+    def add_signal(self, address, signal):
+        """Add new address and rssi to network or override existing rssi"""
+        self.signals[address] = signal
+    
+    def remove_signal(self, address):
+        """Remove address or signal from network"""
+        if address in self.signals.keys():
+            del self.signals[address]
 
-    def set_group(self, address, group):
-        """Add new group to network"""
+    ### Groups ###
+    def add_group(self, address, group):
+        """Add new group to network or override existing group"""
         self.groups[address] = group
 
     def get_group(self, address):
         """Get route for destination address"""
         return self.groups[address]
     
+    ### Addresses ###
+    def addresses(self):
+        """Get value sorted list of known addresses"""
+        return [address for address, in sorted(self.signals.items(), lambda kv: kv[1])]
+
     # def get_next(self, dest):
     #     """Get next address in path to dest"""
     #     for route in self.routes:

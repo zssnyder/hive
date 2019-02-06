@@ -5,7 +5,7 @@ import thread
 import time
 
 run_time = 1
-max_nodes_per_group = 2
+max_nodes_per_group = 4
 
 signal_strength_table = {
     1: {1:0,    2:5,    3:3.5,  4:4,    5:4,    6:7,    7:5.5},
