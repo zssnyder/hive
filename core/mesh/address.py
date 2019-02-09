@@ -11,11 +11,13 @@ class Address():
     def __init__(self, id=None):
         """Initialize instance of address class"""
 
-        if id is not None:
-            self.id = id
-        else: 
+        self.id = id
+        if id is None:
             self.id = uuid.uuid4() # Initialize unique address
 
+    def __str__(self):
+        """Overrides string representation"""
+        return id
 
     def __eq__(self, other):
         """Overrides equatable relation"""

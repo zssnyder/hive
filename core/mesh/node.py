@@ -40,13 +40,6 @@ class Node():
             self.connection, 
             self.network
         )
-        
-        listen(self.address, self.connection, self.message_handler)
 
     def disconnect(self):
-        pass
-        
-
-    def message_handler(self, dest, source, message):
-        """Determines what to do with a message"""
         pass

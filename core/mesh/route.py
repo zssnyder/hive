@@ -4,11 +4,11 @@ __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
 from address import Address
-
+from config import Configuration as config
 class Route():
     """Route class defines message path"""
 
-    def __init__(self, source, next, dest):
+    def __init__(self, next, dest, source):
         """Initialize instance of route class
 
         * source: string - address message comes from
@@ -17,9 +17,9 @@ class Route():
         
         Use '*' for both __next__ and __dest__ to denote all nodes
         """
-        self.source, self.next, self.dest = source, next, dest
+        self.next, self.dest, self.source = next, dest, source
 
 
-    def get_path(self):
+    def __str__(self):
         """Returns the route path to be prefixed to messages"""
-        return self.next.id + "///" + self.dest.id + "///" + self.source.id + "///"
+        return config.separator.join([str(self.next), str(self.dest), str(self.source)])
