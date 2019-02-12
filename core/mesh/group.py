@@ -7,10 +7,12 @@ from uuid import uuid4
 class Group():
     """Group class desribing logical grouping of nodes in network"""
 
-    def __init__(self, id=None, controller=None, network=None, max_size=0):
+    def __init__(self, id=None, controller=None, addresses=None, max_size=0):
         """Initialize Group class
 
-        * addresses: list of node addresses in group
+        * id: unique group identifier
+        * controller: address of the group controller
+        * addresses: list of addresses 
         """
         # Set an unique id for the group
         if id is not None:
@@ -19,12 +21,9 @@ class Group():
             self.id = uuid4()
         
         self.controller = controller
-        # Dictionary of address: distance key-value pairs
-        # self.distances = dict(distances)
+
         # Address of all nodes in group
-        self.addresses = [address for address, _ in sorted(network.signals.items(), lambda kv: kv[1])]
-        # Distances between current node and other nodes
-        # self.distances = [distance for address, distance in self.nodes]
+        self.addresses = addresses
         # Maximum size of a group
         self.max_size = max_size
 

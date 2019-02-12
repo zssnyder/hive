@@ -8,18 +8,22 @@ from config import Configuration as config
 class Route():
     """Route class defines message path"""
 
-    def __init__(self, next, dest, source):
+    def __init__(self, next_addr, dest_addr, last_addr, source_addr):
         """Initialize instance of route class
 
-        * source: string - address message comes from
         * next: string - address to send message next
         * dest: string - final address to send message to  
-        
-        Use '*' for both __next__ and __dest__ to denote all nodes
-        """
-        self.next, self.dest, self.source = next, dest, source
+        * last: string - last address message was sent from
+        * source: string - address original message comes from
 
+        Use wildcard char for  next_addr  and  dest_addr  to denote all nodes
+        """
+        self.next_addr, self.dest_addr, self.last_addr, self.source_addr = next_addr, dest_addr, last_addr, source_addr
+    
+    @classmethod
+    def fromString(cls, next_id="", dest_id="", last_id="", source_id=""):
+        return cls(Address(id=next_id), Address(id=dest_id), Address(id=last_id), Address(id=source_id))
 
     def __str__(self):
         """Returns the route path to be prefixed to messages"""
-        return config.separator.join([str(self.next), str(self.dest), str(self.source)])
+        return config.separator.join([str(self.next_addr), str(self.dest_addr), str(self.last_addr), str(self.source_addr)])

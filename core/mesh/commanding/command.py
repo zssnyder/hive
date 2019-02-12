@@ -11,14 +11,14 @@ class Command():
 
     codes = {}
 
-    def __init__(self, id=None, code="", message=""):
+    def __init__(self, id=None, code="", parameters=""):
         
         self.id = id
         if id is None: 
             self.id = uuid.uuid4()
 
         self.code = code
-        self.message = message
+        self.parameters = parameters
 
     def __str__(self):
-        return config.separator.join([ str(self.id), str(self.code), str(self.message) ])
+        return config.separator.join([ str(self.id), str(self.code), str(self.parameters) ])

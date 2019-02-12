@@ -1,5 +1,3 @@
-"""Address class"""
-
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
@@ -15,6 +13,8 @@ class Address():
         if id is None:
             self.id = uuid.uuid4() # Initialize unique address
 
+    # ----- Overrrides -------
+
     def __str__(self):
         """Overrides string representation"""
         return id
@@ -23,10 +23,14 @@ class Address():
         """Overrides equatable relation"""
         if isinstance(other, Address):
             return self.id == other.id
+        else: 
+            return self.id == other
         return False
     
     def __ne__(self, other):
         """Overrides not equatable relation"""
         if isinstance(other, Address):
             return self.id != other.id
+        else: 
+            return self.id != other
         return False

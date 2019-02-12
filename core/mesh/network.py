@@ -21,7 +21,7 @@ class Network():
         self.signals = signals
         self.groups = groups
 
-    ### Signals ###
+    # ----- Signals -------
     def add_signal(self, address, signal):
         """Add new address and rssi to network or override existing rssi"""
         self.signals[address] = signal
@@ -31,7 +31,7 @@ class Network():
         if address in self.signals.keys():
             del self.signals[address]
 
-    ### Groups ###
+    # ----- Groups --------
     def add_group(self, address, group):
         """Add new group to network or override existing group"""
         self.groups[address] = group
@@ -40,14 +40,8 @@ class Network():
         """Get route for destination address"""
         return self.groups[address]
     
-    ### Addresses ###
+    # ----- Addresses ------
     def addresses(self):
         """Get value sorted list of known addresses"""
         return [address for address, in sorted(self.signals.items(), lambda kv: kv[1])]
-
-    # def get_next(self, dest):
-    #     """Get next address in path to dest"""
-    #     for route in self.routes:
-    #         if route.dest == dest:
-    #             return route.next
 

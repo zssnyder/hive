@@ -4,10 +4,7 @@ __date__ = "2/9/19"
 import string
 import crcmod.predefined as detect
 
-from address import Address
-from commanding.command import Command
-from config import Configuration as config
-from route import Route
+from mesh import Address, Command, Configuration as config, Route
 
 class Packet():
     """Packet class defines the structure of a mesh network packet"""
@@ -23,22 +20,46 @@ class Packet():
         check_CRC.update(packet[:-4])
 
         if packet_CRC == check_CRC.hexdigest():
-            p_components = packet.split(config.separator)
+            p_components = packet[:-4].split(config.separator)
 
-            next = Address(p_components[0])
-            dest = Address(p_components[1])
-            source = Address(p_components[2])
-            route = Route(next, dest, source)
-            command = Command(p_components[3], p_components[4], p_components[5])
+            route = Route.fromString(p_components[0], p_components[1], p_components[2], p_components[3])
+            command = Command(p_components[4], p_components[5], p_components[6])
 
             return Packet(route=route, command=command)
         else:
-            raise Exception('CRC code did not match. Message is corrupted')
+            raise Exception('CRC code did not match. Packet is corrupted')
         
     def crc16(self):
         crc = detect.Crc('crc-16')
         crc.update(str(self))
         return crc.hexdigest()
+
+    # ----- Route accessors ----
+
+    def next_addr(self):
+        return self.route.next_addr
+
+    def dest_addr(self):
+        return self.route.dest_addr
+
+    def last_addr(self):    
+        return self.route.last_addr
+
+    def source_addr(self):
+        return self.route.source_addr
+
+    # ----- Command accessors --------
+
+    def command_id(self):
+        return self.command.id
+
+    def command_code(self):
+        return self.command.code
+
+    def command_param(self):
+        return self.command.parameters
+
+    # ----- Overrides --------
 
     def __str__(self):
         return config.separator.join([str(self.route), str(self.command)])

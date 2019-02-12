@@ -15,14 +15,12 @@ class Connection():
     * read()
     """
 
-    def __init__(self):
+    def __init__(self, baud=9600):
         """Initialize instance of connection
 
-        * baud - radio baud rate
-        * protocol - string identifier 'UART', 'I2C', 'SPI'
+        * baud - baud rate (default 9600)
         """
-        # self.baud = baud
-        # self.protocol = protocol
+        self.baud = baud
         pass
 
     def open(self):
@@ -33,13 +31,13 @@ class Connection():
         """Closes connection to mesh network"""
         raise NotImplementedError( 'Needs implementation' )
 
-    def write (self, message, dest): 
+    def write (self, message=""): 
         """Writes message to mesh network
         
         * message - string message to send over the network
         """
         raise NotImplementedError( 'Needs implementation' )
 
-    def read(self, source):
+    def read(self):
         """Reads message from mesh network"""
         raise NotImplementedError( 'Needs implementation' )
