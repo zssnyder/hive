@@ -20,5 +20,15 @@ class Command():
         self.code = code
         self.parameters = parameters
 
+    @staticmethod
+    def connect():
+        return Command(code="CONNECT")
+
+    @staticmethod
+    def disconnect():
+        return Command(code="DISCONNECT")
+
+    # ----- Overrides -------
+
     def __str__(self):
         return config.separator.join([ str(self.id), str(self.code), str(self.parameters) ])
