@@ -9,8 +9,6 @@ from ..config import Configuration as config
 class Command():
     """Command class defines the types of commands available to transmit"""
 
-    codes = {}
-
     def __init__(self, id=None, code="", parameters=""):
         
         self.id = id
@@ -19,14 +17,6 @@ class Command():
 
         self.code = code
         self.parameters = parameters
-
-    @staticmethod
-    def connect():
-        return Command(code="CONNECT")
-
-    @staticmethod
-    def disconnect():
-        return Command(code="DISCONNECT")
 
     # ----- Overrides -------
 

@@ -1,10 +1,9 @@
 __author__ = "Zack Snyder"
 __date__ = "1/23/19"
 
-from mesh import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
+import Queue
 
-# from listen import listen
-# from transmit import broadcast, transmit, beam, ping
+from mesh import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
 
 class Node():
     """Node class defines and handles all network interactions among nodes in the network"""
@@ -31,10 +30,7 @@ class Node():
         # Connection
         self.connection = connection
         
-        # Dictionary of sent messages waiting for an ack
-        # Key: Message identifier
-        # Value: 
-        # self.waiting_for_ack = dict()
+        self.command_queue = Queue.Queue(-1)
 
     # ------ CONNECTION -----------
 
@@ -46,6 +42,25 @@ class Node():
 
     def disconnect(self):
         pass
+
+    # ----- RECEPTION --------------
+
+    def listen(self):
+        """Listen for messages on network
+        
+        * address - address of listening node
+        * connection - connection class defining radio connection
+        """
+        try: 
+            message = self.connection.read()
+
+            packet = Packet.tryParse(message)
+            self.command_queue.put(packet.command)
+
+            # Add relay handler
+
+        except Exception:
+            print()
 
     # ----- TRANSMISSION -----------
 

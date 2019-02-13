@@ -1,4 +1,3 @@
-from transmit import *
 from listen import *
 from interpret import *
 
@@ -7,7 +6,8 @@ from address import Address
 from commanding.command import Command
 from commanding.handler import Handler
 from config import Configuration
-from connection import Connection
+from connection.connection import Connection
+from connection.console import Console
 from group import Group
 from network import Network
 from node import Node
