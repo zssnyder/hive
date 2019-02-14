@@ -60,7 +60,7 @@ wifi_8030dc047131_536e7964657227732057692d4669204e6574776f726b_managed_psk
 Now we will use the hash to configure our Wi-Fi connection. Make sure to type each line carefully; do not copy/paste.
 ```
 $ sudo chmod -R 777 /var/lib/connman/
-$ cat >/var/lib/connman/wifi.config
+$ cat >/var/lib/connman/<your SSID>-psk.config
 [service_<your hash>]
 Type = wifi
 Security = wpa2
@@ -68,7 +68,7 @@ Name = <your SSID>
 Passphrase = <your Wi-Fi password>
 ```
 
-After entering your passphrase, `Ctrl-D` to quit the prompt. Then type `exit`.
+After entering your passphrase, `Ctrl-D` to quit the prompt. Then type `exit`. You can create many of these `<your SSID.config>-psk.config` files for each different network you want your BeagleBone to join. As long as it follows the same format, `connmanctl` will include it in it's automatic wifi discovery and connection search.
 
 A green light should turn on to show that Wi-Fi is working. The BeagleBone Blue is now connected to the Wi-Fi network and its ip address can be found using
 ```
@@ -129,7 +129,9 @@ TELEM1="-C /dev/ttyO1"
 TELEM2="-A udp:<target IP address>:14550"
 GPS="-B /dev/ttyS2"
 ```
-Switches A-F are defaulted to the following protocols and can be individually configured as shown in the example above.
+Setting up TELEM2 this way allows your computer to discover the BeagleBone Blue automatically in Mission Planner or QGroundControl over Wi-Fi. This can be very useful during debugging
+
+The BeagleBone Blue allows for configuration of 6 different switches with ArduPilot Blue. Switches A-F are defaulted to the following protocols and can be individually configured as shown in the example above.
 ```bash
 Switch -A  -->  "Console", SERIAL0, default 115200
 Switch -B  -->  "GPS", SERIAL3, default 57600
@@ -140,7 +142,11 @@ Switch -F  -->  Unnamed, SERIAL5, default 57600
 ```
 Consult the official ArduPilot documentation for more details on the various serial ports: http://ardupilot.org/plane/docs/parameters.html?highlight=parameters
 
+The config file we created above will be used in the next set of service file configurations. This way, each flavor of ArduPilot can be configured the same way and set to run on startup.
+
 #### 2. Next, we'll create the ArduPilot systemd service files.
+
+The service files we are about to create will allow ArduPilot to run on boot. Notice in the service files below the references to the `/etc/default/ardupilot` config file we created above. Setting the EnvironmentFile allows us to reference the configuration variables we set above and use them to start the ardupilot service.
 
 * **ArduCopter** */lib/systemd/system/arducopter.service*
 ```bash
@@ -204,7 +210,7 @@ RestartSec=1
 WantedBy=multi-user.target
 ```
 
-* **AntennaTracker** */lib/systemd/system/antennatracker.service*
+<!-- * **AntennaTracker** */lib/systemd/system/antennatracker.service*
 
 ```bash
 [Unit]
@@ -223,7 +229,7 @@ RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
-```
+``` -->
 
 #### 3. Create a new directory for hardware configuration files.
 ```bash
@@ -254,7 +260,7 @@ cd ~/
 mkdir ArduCopter
 cd ArduCopter/
 wget http://bbbmini.org/download/blue/ArduCopter/arducopter-3_5_4
-sudo cp arducopter-3_5_4 /usr/bin/ardupilot/
+sudo cp arducopter-3_5_4 /usr/bin/ardupilot/arducopter
 ```
 * **ArduPlane** (http://bbbmini.org/download/blue/ArduPlane/)
 ```bash
@@ -262,7 +268,7 @@ cd ~/
 mkdir ArduPlane
 cd ArduPlane/
 wget http://bbbmini.org/download/blue/ArduPlane/arduplane-3_8_3
-sudo cp arduplane-3_8_3 /usr/bin/ardupilot/
+sudo cp arduplane-3_8_3 /usr/bin/ardupilot/arduplane
 ```
 * **ArduRover** (http://bbbmini.org/download/blue/ArduRover/)
 ```bash
@@ -270,7 +276,7 @@ cd ~/
 mkdir ArduRover
 cd ArduRover/
 wget http://bbbmini.org/download/blue/ArduRover/ardurover
-sudo cp ardurover /usr/bin/ardupilot/
+sudo cp ardurover /usr/bin/ardupilot/ardurover
 ```
 Once downloaded and copied to the `/usr/bin/ardupilot` directory, make sure to set proper permissions: 
 ```
@@ -289,10 +295,10 @@ Or:
 ```
 sudo systemctl enable ardurover.service
 ```
-Or:
+<!-- Or:
 ```
 sudo systemctl enable antennatracker.service
-```
+``` -->
 After a reboot, you should see a flashing red LED which means everything is working as expected.
 
 You can use `systemctl` to start and stop the ArduPilot service whenever you like.

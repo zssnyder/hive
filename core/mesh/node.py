@@ -1,58 +1,160 @@
 __author__ = "Zack Snyder"
 __date__ = "1/23/19"
 
-from address import Address
-from group import Group
-from network import Network
-from connection import Connection
-from listen import listen
-from transmit import broadcast, transmit, beam, ping
+import Queue
+
+from mesh import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
 
 class Node():
     """Node class defines and handles all network interactions among nodes in the network"""
 
-    def __init__(self, address=None, group=None, network=None, connection=None):
+    def __init__(self, address=Address(), group=None, network=None, connection=Connection()):
         """Initialize instance of Node class"""
         
         # Address
         self.address = address
-        if address is None:
-            self.address = Address()
         
         # Group
         self.group = group
         if group is None:
-            self.group = Group(None, address, [])
-        
+            self.group = Group(controller=address, addresses=[address], max_size=1)
+
         # Network
         self.network = network
         if network is None:
-            self.network = Network()
-        
+            self.network = Network(signals={self.address: 0}, groups={self.address: self.group})
+        else: 
+            self.network.add_signal(self.address, 0)
+            self.network.add_group(self.address, self.group)
+
         # Connection
         self.connection = connection
-        if connection is None:
-            self.connection = Connection()
         
-        # Dictionary of sent messages waiting for an ack
-        # Key: Message identifier
-        # Value: 
-        self.waiting_for_ack = dict()
+        self.command_queue = Queue.Queue(-1)
+
+    # ------ CONNECTION -----------
 
     def connect(self):
         """Connect node to group network"""
-        broadcast(
-            "Connect", 
-            self.connection, 
-            self.network
-        )
-        
-        listen(self.address, self.connection, self.message_handler)
+        pass
+        # command = Command.connect()
+        # broadcast()
 
     def disconnect(self):
         pass
-        
 
-    def message_handler(self, dest, source, message):
-        """Determines what to do with a message"""
-        pass
+    # ----- RECEPTION --------------
+
+    def listen(self):
+        """Listen for messages on network
+        
+        * address - address of listening node
+        * connection - connection class defining radio connection
+        """
+        try: 
+            message = self.connection.read()
+
+            packet = Packet.tryParse(message)
+            self.command_queue.put(packet.command)
+
+            # Add relay handler
+
+        except Exception:
+            print()
+
+    # ----- TRANSMISSION -----------
+
+    def tryRelay(self, packet):
+        """Relays the message on to destination node(s)
+        
+        * command - command to relay on
+        * source - address of original commanding node
+        """
+
+        if str(packet.dest_addr()) == config.wildcard:
+            self.broadcast(packet.command, packet.source_addr())
+        elif packet.dest_addr() in self.group.addresses:
+            self.transmit(packet.command, packet.dest_addr(), packet.source_addr())
+        elif packet.next_addr() == self.address:
+            self.broadcast(packet.command, packet.source_addr())
+        else:
+            raise Exception('Packet should not be relayed')
+
+
+    def broadcast(self, command, source):
+        """Sends message to all nodes in network
+
+        If a connection is established, sends message out to all nodes.
+        Returns an exception if connection is null or fails.
+
+        * command - command to broadcast
+        * source - address of original commanding node
+        """
+        packet = Packet(command=command)
+
+        if self.group.controller == self.address: 
+            packet.route = Route(
+                next_addr=Address(config.wildcard), 
+                dest_addr=Address(config.wildcard), 
+                last_addr=self.address, 
+                source_addr=source
+            )
+        else: 
+            packet.route = Route(
+                next_addr=self.group.controller,
+                dest_addr=Address(config.wildcard),
+                last_addr=self.address, 
+                source_addr=source
+            )
+
+        self.connection.open()
+        self.connection.write(str(packet) + packet.crc16)
+        self.connection.close()
+
+    def transmit(self, command, dest, source):
+        """Sends message to given destintaion via the mesh network
+
+        If a connection is established, sends message out on the given connection.
+        Returns an exception if connection is null or fails.
+
+        * command - command to transmit
+        * dest - final destination node address
+        * source - address of original commanding node
+        """
+        packet = Packet(command=command)
+
+        if dest in self.group.addresses:
+            packet.route = Route(
+                next_addr=dest, 
+                dest_addr=dest, 
+                last_addr=self.address, 
+                source_addr=source
+            )
+        else:
+            self.broadcast(command, source)
+            return
+
+        self.connection.open()
+        self.connection.write(str(packet) + packet.crc16) # Uses next in route to carry the message to destination
+        self.connection.close()
+
+    def beam(self, command, dest):
+        """Sends message directly to destination address
+
+        Sends message regardless of connection.
+        If no ACK is receieved, exception is thrown.
+
+        * command - command to beam
+        * dest - final destination node address
+        """
+        packet = Packet(command=command)
+        packet.route = Route(
+            next_addr=dest,
+            dest_addr=dest,
+            last_addr=self.address,
+            source_addr=self.address
+        )
+
+        self.connection.open()
+        self.connection.write(str(packet) + packet.crc16)
+        self.connection.close()
