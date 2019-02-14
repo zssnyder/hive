@@ -3,7 +3,7 @@ __date__ = "2/11/19"
 
 import cmd
 
-from connection import Connection
+from .. import Connection
 
 class Console(Connection):
 
