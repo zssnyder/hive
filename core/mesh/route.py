@@ -5,7 +5,7 @@ __date__ = "1/10/2019"
 
 from address import Address
 from config import Configuration as config
-class Route():
+class Route(object):
     """Route class defines message path"""
 
     def __init__(self, next_addr, dest_addr, last_addr, source_addr):

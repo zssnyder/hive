@@ -7,7 +7,7 @@ import crcmod.predefined as detect
 from . import Address, Command, Configuration as config, Route
 from exceptions import CorruptPacketException
 
-class Packet():
+class Packet(object):
     """Packet class defines the structure of a mesh network packet"""
 
     def __init__(self, route=None, command=None):

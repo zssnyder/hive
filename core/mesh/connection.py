@@ -3,7 +3,7 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
-class Connection():
+class Connection(object):
     """Defines the lowest level radio connection interface. 
     
     Each radio requires a new instance of subclass.

@@ -6,7 +6,7 @@ __date__ = "1/10/2019"
 from address import Address
 from group import Group
 
-class Network():
+class Network(object):
     """Network class describing network topology
     
     Stores network configuration in network table

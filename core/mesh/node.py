@@ -4,9 +4,9 @@ __date__ = "1/23/19"
 import Queue
 
 from . import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
-from exceptions import CorruptPacketException, FailedReadException
+from exceptions import CorruptPacketException, ReadTimeoutException
 
-class Node():
+class Node(object):
     """Node class defines and handles all network interactions among nodes in the network"""
 
     def __init__(self, address=Address(), group=None, network=None, connection=Connection()):
@@ -60,7 +60,7 @@ class Node():
             message, rssi = self.connection.read()
             packet = Packet.tryParse(message)
 
-        except FailedReadException, fre:
+        except ReadTimeoutException, fre:
             print("No packet read")
             print(fre.args)
         except CorruptPacketException, cpe:

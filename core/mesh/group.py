@@ -4,7 +4,7 @@ __date__ = "1/23/19"
 # import unique identifier library
 from uuid import uuid4
 
-class Group():
+class Group(object):
     """Group class desribing logical grouping of nodes in network"""
 
     def __init__(self, id=None, controller=None, addresses=None, max_size=0):
