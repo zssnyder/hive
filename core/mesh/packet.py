@@ -4,7 +4,8 @@ __date__ = "2/9/19"
 import string
 import crcmod.predefined as detect
 
-from mesh import Address, Command, Configuration as config, Route
+from . import Address, Command, Configuration as config, Route
+from exceptions import CorruptPacketException
 
 class Packet():
     """Packet class defines the structure of a mesh network packet"""
@@ -27,7 +28,7 @@ class Packet():
 
             return Packet(route=route, command=command)
         else:
-            raise Exception('CRC code did not match. Packet is corrupted')
+            raise CorruptPacketException(['CRC code did not match.', packet])
         
     def crc16(self):
         crc = detect.Crc('crc-16')

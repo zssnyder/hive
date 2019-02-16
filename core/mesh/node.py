@@ -3,7 +3,8 @@ __date__ = "1/23/19"
 
 import Queue
 
-from mesh import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
+from . import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
+from exceptions import CorruptPacketException, FailedReadException
 
 class Node():
     """Node class defines and handles all network interactions among nodes in the network"""
@@ -30,7 +31,11 @@ class Node():
         # Connection
         self.connection = connection
         
+        # Create a command queue to store commands before execution
         self.command_queue = Queue.Queue(-1)
+
+        # Create a transmission queue to store packets before transmit
+        self.transmit_queue = Queue.Queue(-1)
 
     # ------ CONNECTION -----------
 
@@ -52,15 +57,22 @@ class Node():
         * connection - connection class defining radio connection
         """
         try: 
-            message = self.connection.read()
-
+            message, rssi = self.connection.read()
             packet = Packet.tryParse(message)
-            self.command_queue.put(packet.command)
 
-            # Add relay handler
-
-        except Exception:
-            print()
+        except FailedReadException, fre:
+            print("No packet read")
+            print(fre.args)
+        except CorruptPacketException, cpe:
+            print("Packet is corrupted")
+            print(cpe.args)
+        else: 
+            # Add signal to network
+            self.network.add_signal(packet.last_addr(), rssi)
+            # Add to command execution queue
+            self.command_queue.put(packet.command, block=False)
+            # Add to relay queue
+            self.transmit_queue.put(packet, block=False)
 
     # ----- TRANSMISSION -----------
 
@@ -75,8 +87,6 @@ class Node():
             self.broadcast(packet.command, packet.source_addr())
         elif packet.dest_addr() in self.group.addresses:
             self.transmit(packet.command, packet.dest_addr(), packet.source_addr())
-        elif packet.next_addr() == self.address:
-            self.broadcast(packet.command, packet.source_addr())
         else:
             raise Exception('Packet should not be relayed')
 
