@@ -3,7 +3,8 @@ __date__ = "1/23/19"
 
 import Queue
 
-from . import Address, Command, Configuration as config, Connection, Group, Network, Packet, Route
+from hive.core.mesh import Address, Configuration as config, Connection, Group, Network, Packet, Route
+from commanding import Command
 from exceptions import CorruptPacketException, ReadTimeoutException
 
 class Node(object):
@@ -60,9 +61,9 @@ class Node(object):
             message, rssi = self.connection.read()
             packet = Packet.tryParse(message)
 
-        except ReadTimeoutException, fre:
+        except ReadTimeoutException, rte:
             print("No packet read")
-            print(fre.args)
+            print(rte.args)
         except CorruptPacketException, cpe:
             print("Packet is corrupted")
             print(cpe.args)
@@ -76,11 +77,10 @@ class Node(object):
 
     # ----- TRANSMISSION -----------
 
-    def tryRelay(self, packet):
+    def relay(self, packet):
         """Relays the message on to destination node(s)
         
-        * command - command to relay on
-        * source - address of original commanding node
+        * packet - original packet to be relayed
         """
 
         if str(packet.dest_addr()) == config.wildcard:
