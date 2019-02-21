@@ -4,8 +4,8 @@ __date__ = "2/9/19"
 import string
 import crcmod.predefined as detect
 
-from . import Address, Command, Configuration as config, Route
-from exceptions import CorruptPacketException
+from hive.core import mesh
+from hive.core.mesh import exceptions
 
 class Packet(object):
     """Packet class defines the structure of a mesh network packet"""
@@ -15,20 +15,20 @@ class Packet(object):
         self.command = command
 
     @staticmethod
-    def tryParse(packet=""):
+    def try_parse(packet=""):
         packet_CRC = packet[-4:]
         check_CRC = detect.Crc('crc-16')
         check_CRC.update(packet[:-4])
 
         if packet_CRC == check_CRC.hexdigest():
-            p_components = packet[:-4].split(config.separator)
+            p_components = packet[:-4].split(mesh.config.separator)
 
-            route = Route.fromString(p_components[0], p_components[1], p_components[2], p_components[3])
-            command = Command(p_components[4], p_components[5], p_components[6])
+            route = mesh.Route.fromString(p_components[0], p_components[1], p_components[2], p_components[3])
+            command = mesh.Command.fromString(p_components[4], p_components[5], p_components[6])
 
             return Packet(route=route, command=command)
         else:
-            raise CorruptPacketException(['CRC code did not match.', packet])
+            raise exceptions.CorruptPacketException(['CRC code did not match.', packet])
         
     def crc16(self):
         crc = detect.Crc('crc-16')
@@ -63,5 +63,5 @@ class Packet(object):
     # ----- Overrides --------
 
     def __str__(self):
-        return config.separator.join([str(self.route), str(self.command)])
+        return mesh.config.separator.join([str(self.route), str(self.command)])
     

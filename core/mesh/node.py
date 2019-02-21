@@ -1,16 +1,15 @@
 __author__ = "Zack Snyder"
 __date__ = "1/23/19"
 
-import Queue
+import queue
 
-from hive.core.mesh import Address, Configuration as config, Connection, Group, Network, Packet, Route
-from commanding import Command
-from exceptions import CorruptPacketException, ReadTimeoutException
+from hive.core import mesh
+from hive.core.mesh import exceptions
 
 class Node(object):
     """Node class defines and handles all network interactions among nodes in the network"""
 
-    def __init__(self, address=Address(), group=None, network=None, connection=Connection()):
+    def __init__(self, address=mesh.Address(), group=None, network=None, connection=mesh.Connection()):
         """Initialize instance of Node class"""
         
         # Address
@@ -19,12 +18,12 @@ class Node(object):
         # Group
         self.group = group
         if group is None:
-            self.group = Group(controller=address, addresses=[address], max_size=1)
+            self.group = mesh.Group(controller=address, addresses=[address], max_size=1)
 
         # Network
         self.network = network
         if network is None:
-            self.network = Network(signals={self.address: 0}, groups={self.address: self.group})
+            self.network = mesh.Network(signals={self.address: 0}, groups={self.address: self.group})
         else: 
             self.network.add_signal(self.address, 0)
             self.network.add_group(self.address, self.group)
@@ -33,10 +32,10 @@ class Node(object):
         self.connection = connection
         
         # Create a command queue to store commands before execution
-        self.command_queue = Queue.Queue(-1)
+        self.command_queue = queue.Queue(-1)
 
         # Create a transmission queue to store packets before transmit
-        self.transmit_queue = Queue.Queue(-1)
+        self.transmit_queue = queue.Queue(-1)
 
     # ------ CONNECTION -----------
 
@@ -59,17 +58,16 @@ class Node(object):
         """
         try: 
             message, rssi = self.connection.read()
-            packet = Packet.tryParse(message)
-
-        except ReadTimeoutException, rte:
+            packet = mesh.Packet.try_parse(message)
+        except exceptions.ReadTimeoutException:
             print("No packet read")
-            print(rte.args)
-        except CorruptPacketException, cpe:
+            # print(rte.args)
+        except exceptions.CorruptPacketException:
             print("Packet is corrupted")
-            print(cpe.args)
+            # print(cpe.args)
         else: 
             # Add signal to network
-            self.network.add_signal(packet.last_addr(), rssi)
+            self.network.add_signal(packet.route.last_addr, rssi)
             # Add to command execution queue
             self.command_queue.put(packet.command, block=False)
             # Add to relay queue
@@ -77,21 +75,23 @@ class Node(object):
 
     # ----- TRANSMISSION -----------
 
-    def relay(self, packet):
+    def try_relay(self, packet):
         """Relays the message on to destination node(s)
         
         * packet - original packet to be relayed
         """
+        if str(packet.route.dest_addr) == str(self.address):
+            raise exceptions.RelayException(['This is the final destination node and should not be relayed', packet])
+        elif self.group.controller != self.address:
+            raise exceptions.RelayException(['Not a controller node.', packet])
+        elif packet.route.next_addr == self.address or str(packet.route.next_addr) == mesh.config.wildcard:
+            if packet.route.dest_addr in self.group.addresses:
+                self.transmit(packet.command, packet.route.dest_addr, packet.route.soure_addr)
+            else:
+                    self.broadcast(packet.command, packet.route.source_addr, dest=packet.route.dest_addr)            
 
-        if str(packet.dest_addr()) == config.wildcard:
-            self.broadcast(packet.command, packet.source_addr())
-        elif packet.dest_addr() in self.group.addresses:
-            self.transmit(packet.command, packet.dest_addr(), packet.source_addr())
-        else:
-            raise Exception('Packet should not be relayed')
 
-
-    def broadcast(self, command, source):
+    def broadcast(self, command, source, dest=mesh.Address(mesh.config.wildcard)):
         """Sends message to all nodes in network
 
         If a connection is established, sends message out to all nodes.
@@ -100,19 +100,19 @@ class Node(object):
         * command - command to broadcast
         * source - address of original commanding node
         """
-        packet = Packet(command=command)
+        packet = mesh.Packet(command=command)
 
         if self.group.controller == self.address: 
-            packet.route = Route(
-                next_addr=Address(config.wildcard), 
-                dest_addr=Address(config.wildcard), 
+            packet.route = mesh.Route(
+                next_addr=mesh.Address(mesh.config.wildcard), 
+                dest_addr=dest, 
                 last_addr=self.address, 
                 source_addr=source
             )
         else: 
-            packet.route = Route(
+            packet.route = mesh.Route(
                 next_addr=self.group.controller,
-                dest_addr=Address(config.wildcard),
+                dest_addr=dest,
                 last_addr=self.address, 
                 source_addr=source
             )
@@ -131,17 +131,17 @@ class Node(object):
         * dest - final destination node address
         * source - address of original commanding node
         """
-        packet = Packet(command=command)
+        packet = mesh.Packet(command=command)
 
         if dest in self.group.addresses:
-            packet.route = Route(
+            packet.route = mesh.Route(
                 next_addr=dest, 
                 dest_addr=dest, 
                 last_addr=self.address, 
                 source_addr=source
             )
         else:
-            self.broadcast(command, source)
+            self.broadcast(command, source, dest=dest)
             return
 
         self.connection.open()
@@ -157,8 +157,8 @@ class Node(object):
         * command - command to beam
         * dest - final destination node address
         """
-        packet = Packet(command=command)
-        packet.route = Route(
+        packet = mesh.Packet(command=command)
+        packet.route = mesh.Route(
             next_addr=dest,
             dest_addr=dest,
             last_addr=self.address,

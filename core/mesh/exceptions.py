@@ -8,3 +8,7 @@ class CorruptPacketException(Exception):
 class ReadTimeoutException(Exception):
     def __init__(self, arg):
       self.args = arg
+
+class RelayException(Exception):
+    def __init__(self, arg):
+      self.args = arg

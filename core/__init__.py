@@ -1,2 +1,2 @@
-import mesh
-import swarm
+from . import mesh
+from . import swarm

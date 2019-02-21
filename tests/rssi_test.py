@@ -1,4 +1,7 @@
 from rssi import RSSI_Scan
+import sys
+
+print(sys.path)
 
 interface = 'en0'
 rssi_scanner = RSSI_Scan(interface)

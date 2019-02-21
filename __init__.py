@@ -1,2 +1,1 @@
-import core
-import plugins
+from . import core

@@ -3,8 +3,12 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
-from address import Address
-from config import Configuration as config
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+sys.path.insert(0,currentdir) 
+
+from .. import mesh
+
 class Route(object):
     """Route class defines message path"""
 
@@ -22,8 +26,8 @@ class Route(object):
     
     @classmethod
     def fromString(cls, next_id="", dest_id="", last_id="", source_id=""):
-        return cls(Address(id=next_id), Address(id=dest_id), Address(id=last_id), Address(id=source_id))
+        return cls(mesh.Address(id=next_id), mesh.Address(id=dest_id), mesh.Address(id=last_id), mesh.Address(id=source_id))
 
     def __str__(self):
         """Returns the route path to be prefixed to messages"""
-        return config.separator.join([str(self.next_addr), str(self.dest_addr), str(self.last_addr), str(self.source_addr)])
+        return mesh.config.separator.join([str(self.next_addr), str(self.dest_addr), str(self.last_addr), str(self.source_addr)])

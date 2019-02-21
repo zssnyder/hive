@@ -3,9 +3,6 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
-from address import Address
-from group import Group
-
 class Network(object):
     """Network class describing network topology
     
