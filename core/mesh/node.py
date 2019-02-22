@@ -35,7 +35,7 @@ class Node(object):
         self.command_queue = queue.Queue(-1)
 
         # Create a transmission queue to store packets before transmit
-        self.transmit_queue = queue.Queue(-1)
+        self.relay_queue = queue.Queue(-1)
 
     # ------ CONNECTION -----------
 
@@ -69,9 +69,11 @@ class Node(object):
             # Add signal to network
             self.network.add_signal(packet.route.last_addr, rssi)
             # Add to command execution queue
-            self.command_queue.put(packet.command, block=False)
-            # Add to relay queue
-            self.transmit_queue.put(packet, block=False)
+            if packet.route.dest_addr == self.address or str(packet.route.dest_addr) == mesh.config.wildcard:
+                self.command_queue.put(packet.command, block=False)
+            # Add to transmit queue
+            if self.group.controller == self.address:
+                self.relay_queue.put(packet, block=False)
 
     # ----- TRANSMISSION -----------
 
