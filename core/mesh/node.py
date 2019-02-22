@@ -59,12 +59,12 @@ class Node(object):
         try: 
             message, rssi = self.connection.read()
             packet = mesh.Packet.try_parse(message)
-        except exceptions.ReadTimeoutException:
+        except exceptions.ReadTimeoutException as rte:
             print("No packet read")
-            # print(rte.args)
-        except exceptions.CorruptPacketException:
+            print(rte.args)
+        except exceptions.CorruptPacketException as cpe:
             print("Packet is corrupted")
-            # print(cpe.args)
+            print(cpe.args)
         else: 
             # Add signal to network
             self.network.add_signal(packet.route.last_addr, rssi)
@@ -88,7 +88,7 @@ class Node(object):
             if packet.route.dest_addr in self.group.addresses:
                 self.transmit(packet.command, packet.route.dest_addr, packet.route.soure_addr)
             else:
-                    self.broadcast(packet.command, packet.route.source_addr, dest=packet.route.dest_addr)            
+                self.broadcast(packet.command, packet.route.source_addr, dest=packet.route.dest_addr)            
 
 
     def broadcast(self, command, source, dest=mesh.Address(mesh.config.wildcard)):
