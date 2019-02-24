@@ -30,12 +30,15 @@ class Node(object):
 
         # Connection
         self.connection = connection
-        
+
         # Create a command queue to store commands before execution
         self.command_queue = queue.Queue(-1)
 
         # Create a transmission queue to store packets before transmit
-        self.relay_queue = queue.Queue(-1)
+        self.transmit_queue = queue.Queue(-1)
+
+        # Create a history table of past commands {Command.id: Source Address}
+        self.packet_history = {}
 
     # ------ CONNECTION -----------
 
@@ -65,6 +68,9 @@ class Node(object):
         except exceptions.CorruptPacketException as cpe:
             print("Packet is corrupted")
             print(cpe.args)
+        except Exception as exc:
+            print("Unknown exception")
+            print(exc.args)
         else: 
             # Add signal to network
             self.network.add_signal(packet.route.last_addr, rssi)
@@ -73,7 +79,7 @@ class Node(object):
                 self.command_queue.put(packet.command, block=False)
             # Add to transmit queue
             if self.group.controller == self.address:
-                self.relay_queue.put(packet, block=False)
+                self.transmit_queue.put(packet, block=False)
 
     # ----- TRANSMISSION -----------
 
@@ -88,9 +94,11 @@ class Node(object):
             raise exceptions.RelayException(['Not a controller node.', packet])
         elif packet.route.next_addr == self.address or str(packet.route.next_addr) == mesh.config.wildcard:
             if packet.route.dest_addr in self.group.addresses:
-                self.transmit(packet.command, packet.route.dest_addr, packet.route.soure_addr)
+                self.transmit(packet.command, dest=packet.route.dest_addr, source=packet.route.soure_addr)
             else:
-                self.broadcast(packet.command, packet.route.source_addr, dest=packet.route.dest_addr)            
+                self.broadcast(packet.command, dest=packet.route.dest_addr, source=packet.route.source_addr)      
+        else:
+            raise Exception(['Unknown relay case', packet])      
 
 
     def broadcast(self, command, source, dest=mesh.Address(mesh.config.wildcard)):

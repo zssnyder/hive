@@ -1,11 +1,9 @@
 __author__ = "Zack Snyder"
 __date__ = "2/11/19"
 
-import cmd
+from hive.core.mesh import Connection
 
-from .. import Connection
-
-class Console(Connection):
+class ConsoleConnection(Connection):
 
     def open(self):
         """Does not need implementation"""
@@ -16,7 +14,7 @@ class Console(Connection):
         pass
 
     def write(self, message=""):
-        print("Your message is: " + message)
+        print("Output: " + message)
 
     def read(self):
-        return input("Type input here: ")
+        return input("Input: ")

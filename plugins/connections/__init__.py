@@ -1,1 +1,1 @@
-from hive.core.mesh import Connection
+from .Console import console
