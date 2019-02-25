@@ -6,8 +6,8 @@ import uuid
 import ast
 import importlib
 
-from hive.core.mesh import handler
-from hive.core.mesh.config import Configuration as config
+from . import handler
+from .config import Configuration as config
 
 class Command(object):
     """Command class defines the types of commands available to transmit"""

@@ -3,8 +3,12 @@ __date__ = "1/23/19"
 
 import queue
 
-from hive.core import mesh
-from hive.core.mesh import exceptions
+# Core 
+from hive.core.mesh import classes as mesh
+from . import exceptions
+
+# Plugins
+from hive.plugins.commands import connect
 
 class Node(object):
     """Node class defines and handles all network interactions among nodes in the network"""
@@ -44,12 +48,18 @@ class Node(object):
 
     def connect(self):
         """Connect node to group network"""
-        pass
+        
+        # Create a connect command 
+        command = connect.ConnectCommand()
+        # Broadcast connect command to network
+        self.broadcast(command, self.address)
+
+        return True
         # command = Command.connect()
         # broadcast()
 
     def disconnect(self):
-        pass
+        return False
 
     # ----- RECEPTION --------------
 

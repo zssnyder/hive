@@ -3,11 +3,7 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
-import os,sys,inspect
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.insert(0,currentdir) 
-
-from .. import mesh
+from hive.core.mesh import classes as mesh
 
 class Route(object):
     """Route class defines message path"""

@@ -4,8 +4,8 @@ __date__ = "2/9/19"
 import string
 import crcmod.predefined as detect
 
-from hive.core import mesh
-from hive.core.mesh import exceptions
+from hive.core.mesh import classes as mesh
+from . import exceptions
 
 class Packet(object):
     """Packet class defines the structure of a mesh network packet"""
