@@ -5,7 +5,7 @@ import queue
 
 # Core 
 from hive.core.mesh import classes as mesh
-from . import exceptions
+from hive.core.mesh.classes import exceptions
 
 # Plugins
 from hive.plugins.commands import connect
