@@ -1,5 +1,5 @@
 # Classes
-from .classes import *
+from hive.core.mesh.classes import *
 
 # Methods
-from .start import start
+from hive.core.mesh.start import start
