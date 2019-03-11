@@ -21,16 +21,17 @@ class Command(object):
         """
         self.id = id
         if id is None: 
-            self.id = uuid.uuid4()
+            self.id = uuid.uuid4().hex
 
         self.handler = handler
         self.parameters = parameters
 
     @classmethod
-    def fromString(cls, id="", handler="", parameters=""):
+    def from_string(cls, id="", handler="", parameters=""):
         # Parse out handler module
         handler_module = importlib.import_module(config.handler_module)
         handler = getattr(handler_module, handler)()
+
         # Evaluate string dictionary
         param_dict = ast.literal_eval(parameters)
         return cls(id=id, handler=handler, parameters=param_dict)

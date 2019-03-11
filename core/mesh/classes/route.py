@@ -21,7 +21,7 @@ class Route(object):
         self.next_addr, self.dest_addr, self.last_addr, self.source_addr = next_addr, dest_addr, last_addr, source_addr
     
     @classmethod
-    def fromString(cls, next_id="", dest_id="", last_id="", source_id=""):
+    def from_string(cls, next_id="", dest_id="", last_id="", source_id=""):
         return cls(mesh.Address(id=next_id), mesh.Address(id=dest_id), mesh.Address(id=last_id), mesh.Address(id=source_id))
 
     def __str__(self):

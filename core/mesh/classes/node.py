@@ -27,19 +27,13 @@ class Node(object):
         # Network
         self.network = network
         if network is None:
-            self.network = mesh.Network(signals={self.address: 0}, groups={self.address: self.group})
+            self.network = mesh.Network(signals={str(self.address): 0}, groups={str(self.address): self.group})
         else: 
             self.network.add_signal(self.address, 0)
             self.network.add_group(self.address, self.group)
 
         # Connection
         self.connection = connection
-
-        # Create a command queue to store commands before execution
-        self.command_queue = queue.Queue(-1)
-
-        # Create a transmission queue to store packets before transmit
-        self.relay_queue = queue.Queue(-1)
 
         # Create a history table of past commands {Command.id: Source Address}
         self.packet_history = {}
@@ -60,36 +54,6 @@ class Node(object):
 
     def disconnect(self):
         return False
-
-    # ----- RECEPTION --------------
-
-    def listen(self):
-        """Listen for messages on network
-        
-        * address - address of listening node
-        * connection - connection class defining radio connection
-        """
-        try: 
-            message, rssi = self.connection.read()
-            packet = mesh.Packet.try_parse(message)
-        except exceptions.ReadTimeoutException as rte:
-            print("No packet read")
-            print(rte.args)
-        except exceptions.CorruptPacketException as cpe:
-            print("Packet is corrupted")
-            print(cpe.args)
-        except Exception as exc:
-            print("Unknown exception")
-            print(exc.args)
-        else: 
-            # Add signal to network
-            self.network.add_signal(packet.route.last_addr, rssi)
-            # Add to command execution queue
-            if packet.route.dest_addr == self.address or str(packet.route.dest_addr) == mesh.config.wildcard:
-                self.command_queue.put(packet.command, block=False)
-            # Add to transmit queue
-            if self.group.controller == self.address:
-                self.relay_queue.put(packet, block=False)
 
     # ----- TRANSMISSION -----------
 
@@ -138,7 +102,7 @@ class Node(object):
             )
 
         self.connection.open()
-        self.connection.write(str(packet) + packet.crc16)
+        self.connection.write(str(packet) + packet.crc16())
         self.connection.close()
 
     def transmit(self, command, dest, source):

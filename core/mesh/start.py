@@ -8,13 +8,16 @@ from hive.core.mesh import classes as mesh
 from hive.core.mesh.classes import exceptions
     
 
-def start(plugins={'connection': console.ConsoleConnection()}):
+def start(wilcard='*', separator='///', handler_module='hive.plugins.handlers', 
+            plugins={'connection': console.ConsoleConnection()}):
     
-    # Establish connection type
-    console_connection = plugins['connection']
+    # Set configuration
+    mesh.config.wildcard = wilcard
+    mesh.separator = separator
+    mesh.config.handler_module = handler_module
 
     # Initialize node
-    node = mesh.Node(connection=console_connection)
+    node = mesh.Node(connection=plugins['connection'])
 
     # Connect the node to the network
     node.connect()
@@ -34,10 +37,14 @@ def start(plugins={'connection': console.ConsoleConnection()}):
             print("Packet is corrupted")
             print(cpe.args)
 
+        except TypeError as te:
+            print("Packet not properly encoded")
+            print(te.args)
+
         except Exception as exc:
             print("Unknown exception")
             print(exc.args)
-            
+
         else: 
             # Add signal to network
             node.network.add_signal(packet.route.last_addr, rssi)

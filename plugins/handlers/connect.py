@@ -1,6 +1,10 @@
-from hive.core.mesh.classes import Handler
+import logging
 
-class ConnectHandler(Handler):
+from hive.core.mesh import classes as mesh
+
+logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s', )
+
+class ConnectHandler(mesh.Handler):
     """Handler for ConnectCommand"""
 
     def execute(self, parameters):
@@ -8,4 +12,6 @@ class ConnectHandler(Handler):
         
         * parameters - dictionary of configuration and initialization
         """
-        pass
+        if parameters['response'] is not None:
+            logging.debug(parameters['address'])
+        

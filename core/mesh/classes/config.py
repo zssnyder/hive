@@ -6,4 +6,5 @@ class Configuration(object):
 
     separator = "///"
     wildcard = "*"
-    handler_module = 'hive.plugins.handlers'
+    handler_module = ''
+    default_handler_module = 'hive.plugins.hanlders'
