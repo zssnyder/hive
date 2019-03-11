@@ -1,13 +1,13 @@
 # Classes
-from .address import Address
-from .command import Command
-from .config import Configuration as config
-from .connection import Connection
-from .group import Group
-from .handler import Handler
-from .network import Network
-from .node import Node
-from .packet import Packet
-from .route import Route
+from hive.core.mesh.classes.address import Address
+from hive.core.mesh.classes.command import Command
+from hive.core.mesh.classes.config import Configuration as config
+from hive.core.mesh.classes.connection import Connection
+from hive.core.mesh.classes.group import Group
+from hive.core.mesh.classes.handler import Handler
+from hive.core.mesh.classes.network import Network
+from hive.core.mesh.classes.node import Node
+from hive.core.mesh.classes.packet import Packet
+from hive.core.mesh.classes.route import Route
 
-from . import exceptions
+from hive.core.mesh.classes import exceptions
