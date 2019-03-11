@@ -4,7 +4,7 @@ __date__ = "2/9/19"
 class Handler(object):
     """Handler class interprets and executes commands"""
 
-    def execute(self, command):
+    def execute(self, parameters=dict()):
         """Handles execution of specific command"""
         raise NotImplementedError( 'Needs implementation' )
 

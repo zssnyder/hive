@@ -1,7 +1,13 @@
 __author__ = "Zack Snyder"
 __date__ = "2/11/19"
 
-from hive.core.mesh import Connection
+import logging
+
+from hive.core.mesh.classes import Connection
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='(%(threadName)-10s) %(message)s',
+                    )
 
 class ConsoleConnection(Connection):
 
@@ -14,7 +20,7 @@ class ConsoleConnection(Connection):
         pass
 
     def write(self, message=""):
-        print("Output: " + message)
+        logging.debug('Output: %s', message)
 
     def read(self):
-        return input("Input: ")
+        return input('Input: ')

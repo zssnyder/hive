@@ -35,6 +35,10 @@ class Command(object):
         param_dict = ast.literal_eval(parameters)
         return cls(id=id, handler=handler, parameters=param_dict)
 
+    def handle(self):
+        """Executes handler for command"""
+        self.handler.execute(self.parameters)
+
     # ----- Overrides -------
 
     def __str__(self):

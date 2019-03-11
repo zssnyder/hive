@@ -1,5 +1,5 @@
 # Classes
-from classes import *
+from .classes import *
 
 # Methods
 from .start import start

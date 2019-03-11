@@ -39,7 +39,7 @@ class Node(object):
         self.command_queue = queue.Queue(-1)
 
         # Create a transmission queue to store packets before transmit
-        self.transmit_queue = queue.Queue(-1)
+        self.relay_queue = queue.Queue(-1)
 
         # Create a history table of past commands {Command.id: Source Address}
         self.packet_history = {}
@@ -89,7 +89,7 @@ class Node(object):
                 self.command_queue.put(packet.command, block=False)
             # Add to transmit queue
             if self.group.controller == self.address:
-                self.transmit_queue.put(packet, block=False)
+                self.relay_queue.put(packet, block=False)
 
     # ----- TRANSMISSION -----------
 
