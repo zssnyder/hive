@@ -4,7 +4,8 @@ __date__ = "2/9/19"
 import string
 import crcmod.predefined as detect
 
-from hive.core.mesh import classes as mesh
+from hive.core.mesh import mesh
+from hive.core.mesh import classes
 from hive.core.mesh.classes import exceptions
 
 class Packet(object):
@@ -21,10 +22,10 @@ class Packet(object):
         check_CRC.update((packet[:-4]).encode('utf-8'))
 
         if packet_CRC == check_CRC.hexdigest():
-            p_components = packet[:-4].split(mesh.config.separator)
+            p_components = packet[:-4].split(mesh.configuration.separator)
 
-            route = mesh.Route.from_string(p_components[0], p_components[1], p_components[2], p_components[3])
-            command = mesh.Command.from_string(p_components[4], p_components[5], p_components[6])
+            route = classes.Route.from_string(p_components[0], p_components[1], p_components[2], p_components[3])
+            command = classes.Command.from_string(p_components[4], p_components[5], p_components[6])
 
             return Packet(route=route, command=command)
         else:
@@ -63,5 +64,5 @@ class Packet(object):
     # ----- Overrides --------
 
     def __str__(self):
-        return mesh.config.separator.join([str(self.route), str(self.command)])
+        return mesh.configuration.separator.join([str(self.route), str(self.command)])
     

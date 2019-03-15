@@ -1,33 +1,32 @@
 __author__ = "Zack Snyder"
 __date__ = "1/23/19"
 
-import queue
+import threading
+from collections import deque
 
 # Core 
-from hive.core.mesh import classes as mesh
+from hive.core.mesh import mesh
+from hive.core.mesh import classes
 from hive.core.mesh.classes import exceptions
-
-# Plugins
-from hive.plugins.commands import connect
 
 class Node(object):
     """Node class defines and handles all network interactions among nodes in the network"""
 
-    def __init__(self, address=mesh.Address(), group=None, network=None, connection=mesh.Connection()):
+    def __init__(self, address=classes.Address(), group=None, network=None, connection=classes.Connection()):
         """Initialize instance of Node class"""
-        
+
         # Address
         self.address = address
         
         # Group
         self.group = group
         if group is None:
-            self.group = mesh.Group(controller=address, addresses=[address], max_size=1)
+            self.group = classes.Group(controller=address, addresses=[address], max_size=mesh.configuration.max_group_size)
 
         # Network
         self.network = network
         if network is None:
-            self.network = mesh.Network(signals={str(self.address): 0}, groups={str(self.address): self.group})
+            self.network = classes.Network(signals={str(self.address): 0}, groups={str(self.address): self.group})
         else: 
             self.network.add_signal(self.address, 0)
             self.network.add_group(self.address, self.group)
@@ -35,25 +34,88 @@ class Node(object):
         # Connection
         self.connection = connection
 
+        # Double-ended Queue Buffers
+        self.incoming_deque = deque()
+        self.outgoing_deque = deque()
+        self.execution_deque = deque()
+
         # Create a history table of past commands {Command.id: Source Address}
         self.packet_history = {}
 
-    # ------ CONNECTION -----------
+        # Is node connected to the network
+        self.is_connnected = False
 
-    def connect(self):
-        """Connect node to group network"""
-        
-        # Create a connect command 
-        command = connect.ConnectCommand()
-        # Broadcast connect command to network
-        self.broadcast(command, self.address)
+    # ------ Grouping ----------
+            
+    def update_group(self):
 
-        return True
-        # command = Command.connect()
-        # broadcast()
+        # Clear group
+        for address in self.group.addresses:
+            self.group.remove(address)
+
+        # Add all nodes nearby to group
+        for address_str in self.network.signals.keys():
+            if address_str != str(mesh.configuration.ground_station_address):
+                self.group.add(classes.Address(address_str), self.network)
+
+
+        while True:
+            # Make a copy of the group structure before changes
+            before = self.network.groups.copy()
+
+            # Merge group with other groups nearby
+            for address in self.group.addresses[:mesh.configuration.max_group_size + 1]:
+                if address != self.address: 
+                    neighbor_group = self.network.get_group(address)
+                    self.group.merge(address, self.address, neighbor_group)
+                
+
+            # Update global storage
+            self.network.add_group(self.address, self.group)
+
+            # Check if network has updated
+            after = self.network.groups
+            if before == after: break
+            else: print('Grouping node...')
 
     def disconnect(self):
-        return False
+        
+        # command = disconnect.DisconnectCommand()
+        # self.broadcast(command, self.address)
+
+        self.is_connnected = False
+
+    # ----- RECEPTION --------------
+
+    def listen(self):
+
+        try: 
+            # Read Connection
+            message, rssi = self.connection.read()
+            packet = classes.Packet.try_parse(message)
+
+        except exceptions.ReadTimeoutException as rte:
+            print("No packet read")
+            print(rte.args)
+
+        except exceptions.CorruptPacketException as cpe:
+            print("Packet is corrupted")
+            print(cpe.args)
+
+        except TypeError as te:
+            print("Packet not properly encoded")
+            print(te.args)
+
+        except Exception as exc:
+            print("Unknown exception")
+            print(exc.args)
+
+        else: 
+            # Add signal to network
+            self.network.add_signal(packet.route.last_addr, rssi)
+
+            # Add to incoming deque
+            self.incoming_deque.appendleft(packet)
 
     # ----- TRANSMISSION -----------
 
@@ -66,7 +128,7 @@ class Node(object):
             raise exceptions.RelayException(['This is the final destination node and should not be relayed', packet])
         elif self.group.controller != self.address:
             raise exceptions.RelayException(['Not a controller node.', packet])
-        elif packet.route.next_addr == self.address or str(packet.route.next_addr) == mesh.config.wildcard:
+        elif packet.route.next_addr == self.address or str(packet.route.next_addr) == mesh.configuration.wildcard:
             if packet.route.dest_addr in self.group.addresses:
                 self.transmit(packet.command, dest=packet.route.dest_addr, source=packet.route.soure_addr)
             else:
@@ -75,7 +137,7 @@ class Node(object):
             raise Exception(['Unknown relay case', packet])      
 
 
-    def broadcast(self, command, source, dest=mesh.Address(mesh.config.wildcard)):
+    def broadcast(self, command, source, dest=classes.Address(mesh.configuration.wildcard)):
         """Sends message to all nodes in network
 
         If a connection is established, sends message out to all nodes.
@@ -84,26 +146,24 @@ class Node(object):
         * command - command to broadcast
         * source - address of original commanding node
         """
-        packet = mesh.Packet(command=command)
+        packet = classes.Packet(command=command)
 
         if self.group.controller == self.address: 
-            packet.route = mesh.Route(
-                next_addr=mesh.Address(mesh.config.wildcard), 
+            packet.route = classes.Route(
+                next_addr=classes.Address(mesh.configuration.wildcard), 
                 dest_addr=dest, 
                 last_addr=self.address, 
-                source_addr=source
+                source_addr=source 
             )
         else: 
-            packet.route = mesh.Route(
+            packet.route = classes.Route(
                 next_addr=self.group.controller,
                 dest_addr=dest,
                 last_addr=self.address, 
                 source_addr=source
             )
 
-        self.connection.open()
-        self.connection.write(str(packet) + packet.crc16())
-        self.connection.close()
+        self.outgoing_deque.appendleft(packet)
 
     def transmit(self, command, dest, source):
         """Sends message to given destintaion via the mesh network
@@ -115,10 +175,10 @@ class Node(object):
         * dest - final destination node address
         * source - address of original commanding node
         """
-        packet = mesh.Packet(command=command)
+        packet = classes.Packet(command=command)
 
         if dest in self.group.addresses:
-            packet.route = mesh.Route(
+            packet.route = classes.Route(
                 next_addr=dest, 
                 dest_addr=dest, 
                 last_addr=self.address, 
@@ -128,9 +188,7 @@ class Node(object):
             self.broadcast(command, source, dest=dest)
             return
 
-        self.connection.open()
-        self.connection.write(str(packet) + packet.crc16) # Uses next in route to carry the message to destination
-        self.connection.close()
+        self.outgoing_deque.appendleft(packet)
 
     def beam(self, command, dest):
         """Sends message directly to destination address
@@ -141,14 +199,12 @@ class Node(object):
         * command - command to beam
         * dest - final destination node address
         """
-        packet = mesh.Packet(command=command)
-        packet.route = mesh.Route(
+        packet = classes.Packet(command=command)
+        packet.route = classes.Route(
             next_addr=dest,
             dest_addr=dest,
             last_addr=self.address,
             source_addr=self.address
         )
 
-        self.connection.open()
-        self.connection.write(str(packet) + packet.crc16)
-        self.connection.close()
+        self.outgoing_deque.appendleft(packet)

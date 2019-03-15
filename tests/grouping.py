@@ -1,7 +1,7 @@
 __author__ = "Zack Snyder"
 __date__ = "1/25/19"
 
-import thread
+import threading
 import time
 
 run_time = 1
@@ -78,7 +78,7 @@ def create_group(node, max_nodes):
 
 
 for node, _ in signal_strength_table.items():
-    thread.start_new_thread(create_group, (node, max_nodes_per_group,))
+    create_group(node, max_nodes_per_group)
     # time.sleep(0.1)
     # break
 

@@ -3,7 +3,8 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
-from hive.core.mesh import classes as mesh
+from hive.core.mesh import mesh
+from hive.core.mesh import classes
 
 class Route(object):
     """Route class defines message path"""
@@ -22,8 +23,8 @@ class Route(object):
     
     @classmethod
     def from_string(cls, next_id="", dest_id="", last_id="", source_id=""):
-        return cls(mesh.Address(id=next_id), mesh.Address(id=dest_id), mesh.Address(id=last_id), mesh.Address(id=source_id))
+        return cls(classes.Address(id=next_id), classes.Address(id=dest_id), classes.Address(id=last_id), classes.Address(id=source_id))
 
     def __str__(self):
         """Returns the route path to be prefixed to messages"""
-        return mesh.config.separator.join([str(self.next_addr), str(self.dest_addr), str(self.last_addr), str(self.source_addr)])
+        return mesh.configuration.separator.join([str(self.next_addr), str(self.dest_addr), str(self.last_addr), str(self.source_addr)])
