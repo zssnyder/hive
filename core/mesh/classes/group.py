@@ -53,3 +53,9 @@ class Group(object):
             self.addresses.remove(address)
             return True
         return False
+
+    # ----- Overrides -------
+
+    def __str__(self):
+        """String representation of the group"""
+        return str(self.addresses)

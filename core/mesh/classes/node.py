@@ -7,6 +7,7 @@ from collections import deque
 # Core 
 from hive.core.mesh import mesh
 from hive.core.mesh import classes
+from hive.core.mesh import commands
 from hive.core.mesh.classes import exceptions
 
 class Node(object):
@@ -57,8 +58,16 @@ class Node(object):
             if address_str != str(mesh.configuration.ground_station_address):
                 self.group.add(classes.Address(address_str), self.network)
 
-
         while True:
+
+            # Share group with network
+            group_command = commands.GroupCommand(self.group)
+            self.broadcast(group_command, self.address)
+
+            # Wait to hear reponses from all other nodes
+            while len(self.network.addresses()) > len(self.network.groups):
+                pass
+
             # Make a copy of the group structure before changes
             before = self.network.groups.copy()
 
@@ -77,12 +86,6 @@ class Node(object):
             if before == after: break
             else: print('Grouping node...')
 
-    def disconnect(self):
-        
-        # command = disconnect.DisconnectCommand()
-        # self.broadcast(command, self.address)
-
-        self.is_connnected = False
 
     # ----- RECEPTION --------------
 

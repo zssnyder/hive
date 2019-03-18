@@ -41,6 +41,7 @@ class mesh(object):
         self.is_connected = False
 
         # Register network command handlers
+        self.register(commands.ConnectCommand, handlers.ConnectHandler())
         self.register(commands.GroupCommand, handlers.GroupHandler(self.node))
 
         # Start operating on network
@@ -125,15 +126,16 @@ class mesh(object):
                     print(ke.args)
                 else:
                     # Respond to request
-                    parameters = handler.execute(packet.command, packet.route.source_addr)
-                    if parameters is not None:
-                        response_command = Command(response_id=packet.command.response_id, parameters=parameters)
-                        self.respond(response_command, packet.route.source_addr)
+                    response = handler.execute(packet.command, packet.route.source_addr)
+                    if response is not None:
+                        response.response_id = packet.command.response_id
+                        self.respond(response, packet.route.source_addr)
 
     def _process(self):
         """Process incoming data traffic and send to handler thread or respond"""
 
         while not self.stop_event.isSet:
+            # Process incoming packets
             if (self.node.incoming_deque) > 0:
                 packet = self.node.incoming_deque.pop()
 
@@ -156,6 +158,11 @@ class mesh(object):
                         self.node.try_relay(packet)
                     except Exception as e:
                         print(e.args)
+
+            elif int(time.time()) % self.configuration.group_interval == 0:
+                
+                # Manage network grouping
+                self.node.update_group()
 
     # ------- Outgoing ----------------
 
@@ -192,7 +199,6 @@ class mesh(object):
         # Send response
         command.parameters['response'] = True
         self.node.transmit(command, dest, self.node.address)
-
 
     # ------- Register ------------
 
@@ -234,6 +240,7 @@ class mesh(object):
         if connection_attempts >= mesh.configuration.connection_timeout:
             self.is_connected = False
             raise exceptions.ConnectTimeoutException(['Could not reach ground station', connection_attempts])
+
 
     def disconnect(self):
         """Disconnect from network"""

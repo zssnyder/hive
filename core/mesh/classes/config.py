@@ -15,14 +15,21 @@ class Configuration(object):
         # Initialize node
         self.plugins = plugins
 
+        # Packet
         self.separator = "///"
         self.wildcard = "*"
         # self.handler_module = ''
         # self.default_handler_module = 'hive.plugins.handlers'
 
+        # Connection
         self.connection_timeout = 10
 
+        # Ground Station
+        self.is_ground_station = False
         self.ground_station_address = ''
         self.ground_station_ip = ''
 
+        # Grouping
         self.max_group_size = 1
+        # Number of seconds between grouping attempts
+        self.group_interval = 30 

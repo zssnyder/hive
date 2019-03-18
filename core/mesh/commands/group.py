@@ -6,13 +6,13 @@ from hive.core.mesh.classes import command
 class GroupCommand(command.Command):
     """Initiate network grouping"""
 
-    def __init__(self, node):
+    def __init__(self, group):
         """Initialize grouping command"""
 
         parameters = {
-            'id': node.group.id,
-            'group': node.group.addresses,
-            'size': node.group.max_size
+            'id': group.id,
+            'group': group.addresses,
+            'size': group.max_size
         }
 
         super(GroupCommand, self).__init__(parameters=parameters)

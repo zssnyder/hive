@@ -46,4 +46,3 @@ class Network(object):
     def addresses(self):
         """Get value sorted list of known addresses"""
         return [address for address, in sorted(self.signals.items(), lambda kv: kv[1])]
-
