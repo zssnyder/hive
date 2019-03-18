@@ -37,7 +37,6 @@ class Node(object):
         # Double-ended Queue Buffers
         self.incoming_deque = deque()
         self.outgoing_deque = deque()
-        self.execution_deque = deque()
 
         # Create a history table of past commands {Command.id: Source Address}
         self.packet_history = {}

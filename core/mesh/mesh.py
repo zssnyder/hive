@@ -9,7 +9,11 @@ from hive.core.mesh.classes import Command
 from hive.core.mesh.classes import Node
 from hive.core.mesh.classes import Configuration
 from hive.core.mesh.classes import Group
+# Exception module
 from hive.core.mesh.classes import exceptions
+# Commanding modules
+from hive.core.mesh import commands
+from hive.core.mesh import handlers
 
 # Commands
 from hive.core.mesh import commands
@@ -34,50 +38,67 @@ class mesh(object):
         self.handlers = {}
 
         # Run connect() to establish a connection
-        self.is_connected = True
+        self.is_connected = False
+
+        # Register network command handlers
+        self.register(commands.GroupCommand, handlers.GroupHandler(self.node))
 
         # Start operating on network
+        self.stop_event = threading.Event()
+
         self._receive_thread = threading.Thread()
         self._share_thread = threading.Thread()
         self._process_thread = threading.Thread()
         self._handler_thread = threading.Thread()
-        self.start()
+        self._start()
 
     # ----- Private Networking Threads ----------
-    def start(self):
+    def _start(self):
         """Starts up networking threads"""
 
         # Receive data from network
-        if not self._receive_thread.is_alive():
-            self._receive_thread = threading.Thread(target=self._receive)
+        if not self._receive_thread.isAlive:
+            self._receive_thread = threading.Thread(name='Receive Thread', target=self._receive)
             self._receive_thread.start()
 
         # Share data with network
-        if not self._share_thread.is_alive():
-            self._share_thread = threading.Thread(target=self._share)
+        if not self._share_thread.isAlive:
+            self._share_thread = threading.Thread(name='Share Thread', target=self._share)
             self._share_thread.start()
         
         # Process incoming packets
-        if not self._process_thread.is_alive():
-            self._process_thread = threading.Thread(target=self._process)
+        if not self._process_thread.isAlive:
+            self._process_thread = threading.Thread(name='Process Thread', target=self._process)
             self._process_thread.start()
 
         # Hanlder incoming requests
-        if not self._handler_thread.is_alive():
-            self._handler_thread = threading.Thread(target=self._handle)
+        if not self._handler_thread.isAlive:
+            self._handler_thread = threading.Thread(name='Handler Thread', target=self._handle)
             self._handler_thread.start()
+
+    def _stop(self):
+        """Stop networking threads"""
+        # Send stop event to all subthreads
+        self.stop_event.set()
+        # Wait for subthreads to end
+        self._receive_thread.join()
+        self._share_thread.join()
+        self._handler_thread.join()
+        self._process_thread.join()
+        # Reset stop event flag so network can be started again
+        self.stop_event.clear()
 
     def _receive(self):
         """Retrieves network data and stores in buffers"""
 
-        while self.is_connected:
+        while not self.stop_event.isSet:
             self.node.listen()
 
 
     def _share(self):
         """Sends network packets in buffer over network"""
 
-        while self.is_connected:
+        while not self.stop_event.isSet:
             # Wait for packet to be available
             if len(self.node.outgoing_deque) > 0:
 
@@ -89,7 +110,8 @@ class mesh(object):
 
     def _handle(self):
         """Handles incoming requests from the network"""
-        while self.is_connected:
+        
+        while not self.stop_event.isSet:
             if len(self.requests) > 0:
 
                 packet = self.requests.pop()
@@ -109,8 +131,9 @@ class mesh(object):
                         self.respond(response_command, packet.route.source_addr)
 
     def _process(self):
+        """Process incoming data traffic and send to handler thread or respond"""
 
-        while self.is_connected:
+        while not self.stop_event.isSet:
             if (self.node.incoming_deque) > 0:
                 packet = self.node.incoming_deque.pop()
 
@@ -171,13 +194,20 @@ class mesh(object):
         self.node.transmit(command, dest, self.node.address)
 
 
+    # ------- Register ------------
+
+    def register(self, cmd_type, handler):
+        """Register handlers for responding to network requests"""
+        
+        self.handlers[cmd_type.__name__] = handler
+
     # ------- Connect -------------
 
     def connect(self):
         """Connect node to group network"""
         
         self.is_connected = True
-        self.start()
+        self._start()
 
         connection_attempts = 0
 
@@ -193,6 +223,9 @@ class mesh(object):
                 print(qte.args)
                 connection_attempts += 1
             else:
+
+                self.is_connected = True
+
                 # Set configuration
                 self.configuration.ground_station_address = source
                 self.configuration.ground_station_ip = response.parameters['ip']
@@ -201,3 +234,12 @@ class mesh(object):
         if connection_attempts >= mesh.configuration.connection_timeout:
             self.is_connected = False
             raise exceptions.ConnectTimeoutException(['Could not reach ground station', connection_attempts])
+
+    def disconnect(self):
+        """Disconnect from network"""
+
+        # Send out disconnect packet
+
+        self.is_connected = False
+
+        self._stop()

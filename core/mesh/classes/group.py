@@ -18,7 +18,7 @@ class Group(object):
         if id is not None:
             self.id = id
         else:
-            self.id = uuid4()
+            self.id = uuid4().hex
         
         self.controller = controller
 
