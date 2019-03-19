@@ -6,7 +6,7 @@ from gi.repository import Gtk
 #=======================================================
 #The handler class listens for signals from the UI.
 #Each method in the class is an event handler.
-class Handler:
+#class Handler:
 
 #Best practices: Name event handlers starting with 'on'.
 # Then the name of the control that is signalling.
@@ -22,10 +22,11 @@ builder = Gtk.Builder()
 #Add the .glade file to the builder.
 builder.add_from_file("UI.glade")
 #objects can be created to manipulate UI elements.
-window = builder.get_object("MainWindow")
+window = builder.get_object("Swarm Control")
 #connect signals from .glade file to event handlers.
 #For this to work the signals must have the name of the event handler in the "handler" field in glade.
-builder.connect_signals(Handler())
+#builder.connect_signals(Handler())
 #Runs the gtk main method, which renders out the UI and waits for user input.
+
 Gtk.main()
 
