@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
+  <!-- interface-css-provider-path UI.css -->
   <object class="GtkTextBuffer" id="DataLog">
     <property name="text" translatable="yes">This is a test.</property>
   </object>
@@ -10,60 +11,25 @@
     <property name="can_focus">False</property>
     <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
   </object>
-  <object class="GtkImage" id="DroneImage2">
+  <object class="GtkImage" id="Droneimage2">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
   </object>
-  <object class="GtkImage" id="DroneImage3">
+  <object class="GtkImage" id="Droneimage3">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
   </object>
-  <object class="GtkImage" id="DroneImage4">
+  <object class="GtkImage" id="Droneimage4">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
   </object>
-  <object class="GtkImage" id="DroneImage5">
+  <object class="GtkImage" id="Droneimage5">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone1">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone2">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone3">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone4">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone5">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
   </object>
   <object class="GtkApplicationWindow" id="Swarm Control">
     <property name="width_request">950</property>
@@ -74,16 +40,14 @@ Bat:	99%</property>
     <property name="hide_titlebar_when_maximized">True</property>
     <property name="icon">drone.png</property>
     <child>
-      <object class="GtkPaned" id="paned1">
+      <object class="GtkBox" id="box1">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
+        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="position_set">True</property>
         <child>
           <object class="GtkMenuBar" id="menubar1">
-            <property name="height_request">1</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
@@ -232,401 +196,462 @@ Bat:	99%</property>
             </child>
           </object>
           <packing>
-            <property name="resize">False</property>
-            <property name="shrink">False</property>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkPaned" id="paned2">
+          <object class="GtkBox" id="box2">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="orientation">vertical</property>
+            <property name="can_focus">False</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">9</property>
+            <property name="margin_top">5</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
             <child>
-              <object class="GtkPaned" id="paned3">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="position">135</property>
-                <property name="position_set">True</property>
-                <child>
-                  <object class="GtkButtonBox" id="DroneStatus">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="orientation">vertical</property>
-                    <property name="layout_style">start</property>
-                    <child>
-                      <object class="GtkButton" id="Drone1">
-                        <property name="label" translatable="yes">Drone-1</property>
-                        <property name="width_request">85</property>
-                        <property name="height_request">85</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image">DroneImage1</property>
-                        <property name="image_position">top</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="Drone1_clicked_cb" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTextView" id="status1">
-                        <property name="can_focus">True</property>
-                        <property name="pixels_above_lines">3</property>
-                        <property name="editable">False</property>
-                        <property name="buffer">statusDrone1</property>
-                        <property name="overwrite">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                        <property name="non_homogeneous">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="Drone2">
-                        <property name="label" translatable="yes">Drone-2</property>
-                        <property name="width_request">85</property>
-                        <property name="height_request">85</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image">DroneImage2</property>
-                        <property name="image_position">top</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="Drone2_clicked_cb" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTextView" id="status2">
-                        <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="buffer">statusDrone2</property>
-                        <property name="overwrite">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">3</property>
-                        <property name="non_homogeneous">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="Drone3">
-                        <property name="label" translatable="yes">Drone-3</property>
-                        <property name="width_request">85</property>
-                        <property name="height_request">85</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image">DroneImage3</property>
-                        <property name="image_position">top</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="Drone3_clicked_cb" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">4</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTextView" id="status3">
-                        <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="buffer">statusDrone3</property>
-                        <property name="overwrite">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">5</property>
-                        <property name="non_homogeneous">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="Drone4">
-                        <property name="label" translatable="yes">Drone-4</property>
-                        <property name="width_request">85</property>
-                        <property name="height_request">85</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="events">GDK_EXPOSURE_MASK | GDK_STRUCTURE_MASK</property>
-                        <property name="image">DroneImage4</property>
-                        <property name="image_position">top</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="Drone4_clicked_cb" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">6</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTextView" id="status4">
-                        <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="buffer">statusDrone4</property>
-                        <property name="overwrite">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">7</property>
-                        <property name="non_homogeneous">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="Drone5">
-                        <property name="label" translatable="yes">Drone-5</property>
-                        <property name="width_request">85</property>
-                        <property name="height_request">85</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image">DroneImage5</property>
-                        <property name="image_position">top</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="clicked" handler="Drone5_clicked_cb" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">8</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTextView" id="status5">
-                        <property name="can_focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="buffer">statusDrone5</property>
-                        <property name="overwrite">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">9</property>
-                        <property name="non_homogeneous">True</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="resize">False</property>
-                    <property name="shrink">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkNotebook" id="ViewSwitcher">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <object class="GtkDrawingArea" id="DroneTracking">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="View1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Drone Tracking</property>
-                        <property name="justify">center</property>
-                      </object>
-                      <packing>
-                        <property name="tab_fill">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGrid" id="grid1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="valign">center</property>
-                        <property name="hexpand">False</property>
-                        <property name="row_spacing">10</property>
-                        <property name="column_spacing">10</property>
-                        <property name="baseline_row">3</property>
-                        <child>
-                          <object class="GtkButton" id="preset1">
-                            <property name="label" translatable="yes">Preset 1</property>
-                            <property name="width_request">200</property>
-                            <property name="height_request">200</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="preset2">
-                            <property name="label" translatable="yes">Preset 2</property>
-                            <property name="width_request">200</property>
-                            <property name="height_request">200</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">3</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="preset3">
-                            <property name="label" translatable="yes">Preset 3</property>
-                            <property name="width_request">200</property>
-                            <property name="height_request">200</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">3</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="preset4">
-                            <property name="label" translatable="yes">Preset 4</property>
-                            <property name="width_request">200</property>
-                            <property name="height_request">200</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">3</property>
-                            <property name="top_attach">3</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="View2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Preset Selection</property>
-                        <property name="justify">center</property>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                        <property name="tab_fill">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTextView" id="RawData">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="buffer">DataLog</property>
-                        <property name="monospace">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="View3">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Raw Data Log</property>
-                        <property name="justify">center</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                        <property name="tab_fill">False</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">False</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="resize">False</property>
-                <property name="shrink">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkStatusbar" id="statusbar1">
-                <property name="height_request">1</property>
+              <object class="GtkButtonBox" id="DroneStatus">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">10</property>
+                <property name="margin_left">5</property>
                 <property name="margin_right">10</property>
-                <property name="margin_start">10</property>
-                <property name="margin_end">10</property>
-                <property name="margin_top">1</property>
-                <property name="margin_bottom">6</property>
+                <property name="margin_top">5</property>
+                <property name="orientation">vertical</property>
+                <property name="layout_style">start</property>
+                <child>
+                  <object class="GtkToggleButton" id="Drone1">
+                    <property name="label" translatable="yes">Drone-1</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">DroneImage1</property>
+                    <property name="image_position">top</property>
+                    <property name="always_show_image">True</property>
+                    <style>
+                      <class name="DroneOne"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="status1">
+                    <property name="can_focus">True</property>
+                    <property name="pixels_above_lines">3</property>
+                    <property name="editable">False</property>
+                    <property name="buffer">statusDrone1</property>
+                    <property name="overwrite">True</property>
+                    <style>
+                      <class name="BColor"/>
+                      <class name="Status"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                    <property name="non_homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="Drone2">
+                    <property name="label" translatable="yes">Drone-2</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">Droneimage2</property>
+                    <property name="image_position">top</property>
+                    <property name="always_show_image">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="status2">
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="buffer">statusDrone2</property>
+                    <property name="overwrite">True</property>
+                    <style>
+                      <class name="BColor"/>
+                      <class name="Status"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                    <property name="non_homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="Drone3">
+                    <property name="label" translatable="yes">Drone-3</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">Droneimage3</property>
+                    <property name="image_position">top</property>
+                    <property name="always_show_image">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="status3">
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="buffer">statusDrone3</property>
+                    <property name="overwrite">True</property>
+                    <style>
+                      <class name="BColor"/>
+                      <class name="Status"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                    <property name="non_homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="Drone4">
+                    <property name="label" translatable="yes">Drone4</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">Droneimage4</property>
+                    <property name="image_position">top</property>
+                    <property name="always_show_image">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="status4">
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="buffer">statusDrone4</property>
+                    <property name="overwrite">True</property>
+                    <style>
+                      <class name="BColor"/>
+                      <class name="Status"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">7</property>
+                    <property name="non_homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="Drone5">
+                    <property name="label" translatable="yes">Drone-5</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">Droneimage5</property>
+                    <property name="image_position">top</property>
+                    <property name="always_show_image">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="status5">
+                    <property name="can_focus">True</property>
+                    <property name="editable">False</property>
+                    <property name="buffer">statusDrone5</property>
+                    <property name="overwrite">True</property>
+                    <style>
+                      <class name="BColor"/>
+                      <class name="Status"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">9</property>
+                    <property name="non_homogeneous">True</property>
+                  </packing>
+                </child>
+                <style>
+                  <class name="BColor"/>
+                </style>
               </object>
               <packing>
-                <property name="resize">False</property>
-                <property name="shrink">False</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkNotebook" id="ViewSwitcher">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="margin_right">1</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="GtkDrawingArea" id="DroneTracking">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="View1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Drone Tracking</property>
+                    <property name="justify">center</property>
+                  </object>
+                  <packing>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkGrid" id="grid1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="hexpand">False</property>
+                    <property name="row_spacing">10</property>
+                    <property name="column_spacing">10</property>
+                    <property name="baseline_row">3</property>
+                    <child>
+                      <object class="GtkButton" id="preset1">
+                        <property name="label" translatable="yes">Preset 1</property>
+                        <property name="width_request">200</property>
+                        <property name="height_request">200</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="preset2">
+                        <property name="label" translatable="yes">Preset 2</property>
+                        <property name="width_request">200</property>
+                        <property name="height_request">200</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="preset3">
+                        <property name="label" translatable="yes">Preset 3</property>
+                        <property name="width_request">200</property>
+                        <property name="height_request">200</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="preset4">
+                        <property name="label" translatable="yes">Preset 4</property>
+                        <property name="width_request">200</property>
+                        <property name="height_request">200</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">3</property>
+                        <property name="top_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="View2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Preset Selection</property>
+                    <property name="justify">center</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTextView" id="RawData">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="buffer">DataLog</property>
+                    <property name="monospace">True</property>
+                    <style>
+                      <class name="RawData"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="View3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Raw Data Log</property>
+                    <property name="justify">center</property>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <style>
+                  <class name="BColor"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <style>
+              <class name="BColor"/>
+            </style>
           </object>
           <packing>
-            <property name="resize">True</property>
-            <property name="shrink">True</property>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkStatusbar" id="statusbar1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_start">10</property>
+            <property name="margin_end">10</property>
+            <property name="margin_top">1</property>
+            <property name="margin_bottom">1</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <style>
+          <class name="BColor"/>
+        </style>
       </object>
     </child>
+    <style>
+      <class name="BColor"/>
+    </style>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone1">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone2">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone3">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone4">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone5">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
   </object>
 </interface>
