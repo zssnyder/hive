@@ -89,35 +89,9 @@ class Node(object):
 
     # ----- RECEPTION --------------
 
-    def listen(self):
+    # def listen(self):
 
-        try: 
-            # Read Connection
-            message, rssi = self.connection.read()
-            packet = classes.Packet.try_parse(message)
-
-        except exceptions.ReadTimeoutException as rte:
-            print("No packet read")
-            print(rte.args)
-
-        except exceptions.CorruptPacketException as cpe:
-            print("Packet is corrupted")
-            print(cpe.args)
-
-        except TypeError as te:
-            print("Packet not properly encoded")
-            print(te.args)
-
-        except Exception as exc:
-            print("Unknown exception")
-            print(exc.args)
-
-        else: 
-            # Add signal to network
-            self.network.add_signal(packet.route.last_addr, rssi)
-
-            # Add to incoming deque
-            self.incoming_deque.appendleft(packet)
+        
 
     # ----- TRANSMISSION -----------
 

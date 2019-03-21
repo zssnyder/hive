@@ -5,10 +5,10 @@ import time
 import collections
 
 from hive.core.mesh.classes import Address
-from hive.core.mesh.classes import Command
 from hive.core.mesh.classes import Node
 from hive.core.mesh.classes import Configuration
 from hive.core.mesh.classes import Group
+from hive.core.mesh.classes import Packet
 # Exception module
 from hive.core.mesh.classes import exceptions
 # Commanding modules
@@ -32,10 +32,11 @@ class mesh(object):
         # Set network configuration values
         mesh.configuration = configuration
 
-        # Response dictionary for passing packets
+        # Packet data structures
         self.requests = collections.deque()
         self.response = {}
         self.handlers = {}
+        self.packet_history = collections.deque(maxlen=100)
 
         # Run connect() to establish a connection
         self.is_connected = False
@@ -46,6 +47,7 @@ class mesh(object):
 
         # Start operating on network
         self.stop_event = threading.Event()
+        self._responses_lock = threading.Lock()
 
         self._receive_thread = threading.Thread()
         self._share_thread = threading.Thread()
@@ -93,7 +95,37 @@ class mesh(object):
         """Retrieves network data and stores in buffers"""
 
         while not self.stop_event.isSet:
-            self.node.listen()
+            
+            try: 
+                # Get raw message and parse it
+                message, rssi = self.node.connection.read()
+                packet = Packet.try_parse(message)
+
+            except exceptions.ReadTimeoutException as rte:
+                print("No packet read")
+                print(rte.args)
+
+            except exceptions.CorruptPacketException as cpe:
+                print("Packet is corrupted")
+                print(cpe.args)
+
+            except TypeError as te:
+                print("Packet not properly encoded")
+                print(te.args)
+
+            except Exception as exc:
+                print("Unknown exception")
+                print(exc.args)
+
+            else: 
+                # Add signal to network
+                self.node.network.add_signal(packet.route.last_addr, rssi)
+                
+                if packet.command.id not in self.packet_history:
+                    # Keep track of previous packets
+                    self.packet_history.appendleft(packet.command.id)
+                    # Add to incoming deque
+                    self.node.incoming_deque.appendleft(packet)
 
 
     def _share(self):
@@ -104,6 +136,8 @@ class mesh(object):
             if len(self.node.outgoing_deque) > 0:
 
                 packet = self.node.outgoing_deque.pop()
+                # Keep log of outgoing packets
+                self.packet_history.appendleft(packet.command.id)
 
                 self.node.connection.open()
                 self.node.connection.write(str(packet) + packet.crc16())
@@ -142,12 +176,16 @@ class mesh(object):
                 # Handle Command
                 if packet.route.dest_addr == self.node.address or str(packet.route.dest_addr) == self.configuration.wildcard:
                     if packet.command.response_id in self.response.keys():
-                        event = self.response[packet.command.response_id]
+                        
+                        with self._responses_lock:
+                            # Read event from responses
+                            event = self.response[packet.command.response_id]
 
-                        # Pass packet to response dictionary
-                        self.response[str(packet.command.response_id)] = packet
-                        # Notify proper thread for execution
-                        event.set()
+                            # Pass packet to response dictionary
+                            self.response[str(packet.command.response_id)] = packet
+
+                            # Notify proper thread for execution
+                            event.set()
                     else:
                         self.requests.appendleft(packet)
                         
@@ -166,7 +204,7 @@ class mesh(object):
 
     # ------- Outgoing ----------------
 
-    def try_request(self, command, dest=Address(mesh.configuration.wildcard), timeout=5.0):
+    def try_request(self, command, dest=Address(mesh.configuration.wildcard), timeout=5.0, responses=1):
         """Register custom handler for event"""
         event = threading.Event()
         self.response[str(command.id)] = event
@@ -179,19 +217,26 @@ class mesh(object):
         else:
             self.node.transmit(command, dest, self.node.address)
 
-        # Wait for response
-        success = event.wait(timeout=timeout) 
+        for _ in range(responses):
+            # Wait for response
+            success = event.wait(timeout=timeout) 
+            event.clear()
 
-        if success:
-            # Get packet
-            packet = self.response[str(command.id)]
-            # Delete packet from record
-            del self.response[str(command.id)]
-            # Return response command and soure address
-            return packet.command, packet.route.source_addr
-        else: 
-            raise exceptions.RequestTimeoutException(('Query did not receive a response in the specified time', command))
+            if success:
+                # Perform thread-safe read/write
+                with self._responses_lock:
+                    # Get packet
+                    packet = self.response[str(command.id)]
+                    # Pass event back to process thread
+                    self.response[str(command.id)] = event
 
+                # Return response command and soure address
+                return packet.command, packet.route.source_addr
+            else: 
+                raise exceptions.RequestTimeoutException(('Query did not receive a response in the specified time', command))
+        
+        # Delete response request
+        del self.response[str(command.id)]
 
     def respond(self, command, dest):
         """Respond to a given command"""
@@ -212,7 +257,6 @@ class mesh(object):
     def connect(self):
         """Connect node to group network"""
         
-        self.is_connected = True
         self._start()
 
         connection_attempts = 0
