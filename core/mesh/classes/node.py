@@ -45,53 +45,6 @@ class Node(object):
         # Is node connected to the network
         self.is_connnected = False
 
-    # ------ Grouping ----------
-            
-    def update_group(self):
-
-        # Clear group
-        for address in self.group.addresses:
-            self.group.remove(address)
-
-        # Add all nodes nearby to group
-        for address_str in self.network.signals.keys():
-            if address_str != str(mesh.configuration.ground_station_address):
-                self.group.add(classes.Address(address_str), self.network)
-
-        while True:
-
-            # Share group with network
-            group_command = commands.GroupCommand(self.group)
-            self.broadcast(group_command, self.address)
-
-            # Wait to hear reponses from all other nodes
-            while len(self.network.addresses()) > len(self.network.groups):
-                pass
-
-            # Make a copy of the group structure before changes
-            before = self.network.groups.copy()
-
-            # Merge group with other groups nearby
-            for address in self.group.addresses[:mesh.configuration.max_group_size + 1]:
-                if address != self.address: 
-                    neighbor_group = self.network.get_group(address)
-                    self.group.merge(address, self.address, neighbor_group)
-                
-
-            # Update global storage
-            self.network.add_group(self.address, self.group)
-
-            # Check if network has updated
-            after = self.network.groups
-            if before == after: break
-            else: print('Grouping node...')
-
-
-    # ----- RECEPTION --------------
-
-    # def listen(self):
-
-        
 
     # ----- TRANSMISSION -----------
 

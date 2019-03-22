@@ -5,6 +5,8 @@ from hive.core.mesh.classes import handler
 from hive.core.mesh.classes import Address
 from hive.core.mesh.classes import Group
 
+from hive.core.mesh import commands
+
 class GroupHandler(handler.Handler):
     """Handler class for network requests"""
 
@@ -18,8 +20,4 @@ class GroupHandler(handler.Handler):
     def execute(self, parameters, source):
         """Execute grouping command handler"""
 
-        # Initialize neighbor group
-        addresses = [Address(addr) for addr in parameters['group']]
-        group = Group(parameters['id'], source, addresses, int(parameters['size']))
-        # Update neighbor group in network
-        self.node.network.add_group(source, group)
+        return commands.GroupCommand(self.node.group, self.node.network.score())

@@ -186,7 +186,7 @@ class mesh(object):
 
                             # Notify proper thread for execution
                             event.set()
-                    else:
+                    elif packet.command.parameters['request'] == True: 
                         self.requests.appendleft(packet)
                         
 
@@ -217,7 +217,10 @@ class mesh(object):
         else:
             self.node.transmit(command, dest, self.node.address)
 
-        for _ in range(responses):
+        # return value
+        response_dict = dict()
+
+        while len(response_dict) < responses:
             # Wait for response
             success = event.wait(timeout=timeout) 
             event.clear()
@@ -231,12 +234,15 @@ class mesh(object):
                     self.response[str(command.id)] = event
 
                 # Return response command and soure address
-                return packet.command, packet.route.source_addr
+                response_dict[str(packet.route.source_addr)] = packet.command
             else: 
                 raise exceptions.RequestTimeoutException(('Query did not receive a response in the specified time', command))
         
         # Delete response request
         del self.response[str(command.id)]
+
+        # Return the responses
+        return response_dict
 
     def respond(self, command, dest):
         """Respond to a given command"""
@@ -294,3 +300,75 @@ class mesh(object):
         self.is_connected = False
 
         self._stop()
+
+    # ------ Grouping ----------
+            
+    def update_group(self):
+
+        # Clear group
+        for address in self.node.group.addresses:
+            self.node.group.remove(address)
+
+        # Add all nodes nearby to group
+        for address_str in self.node.network.signals.keys():
+            if address_str != str(mesh.configuration.ground_station_address):
+                self.node.group.add(Address(address_str), self.node.network)
+
+        while True:
+
+            # Share group with network
+            group_command = commands.GroupCommand(self.node.group, self.node.network.score())
+            
+            # Request responses of other groups (won't receive response from self or ground station)
+            responses = self.try_request(group_command, responses=len(self.node.network.signals) - 2)
+
+            # Update network with other groups
+            for source_str in responses.keys():
+
+                parameters = responses[source_str].parameters
+                source = Address(source_str)
+
+                # Initialize neighbor group
+                addresses = [Address(addr) for addr in parameters['group']]
+                group = Group(parameters['id'], Address(parameters['controller']), addresses, int(parameters['size']))
+                # Update neighbor group in network
+                self.node.network.add_group(source, group)
+
+            # Make a copy of the network before changes
+            before = self.node.network.groups.copy()
+
+            # Merge group with other groups nearby
+            for address in self.node.group.addresses[:mesh.configuration.max_group_size + 1]:
+                if address != self.node.address: 
+                    neighbor_group = self.node.network.get_group(address)
+                    self.node.group.merge(address, self.node.address, neighbor_group)
+                
+
+            # Update network
+            self.node.network.add_group(self.node.address, self.node.group)
+
+            # Check if network has updated
+            after = self.node.network.groups
+            # Grouping complete?
+            if before == after: 
+                
+                # Set controller for group
+                for address in self.node.group.addresses:
+                    
+                    # Current group controller is not self
+                    if str(address) in responses.keys() and str(self.node.group.controller) in responses.keys():
+                        score = responses[str(address)].parameters['score']
+                        current_score = responses[str(self.node.group.controller)]
+                    
+                        if score > current_score: self.node.group.controller = address
+
+                    # Current group controller is self
+                    elif str(address) in responses.keys() and address == self.node.address:
+                        score = responses[str(address)].parameters['score']
+                        current_score = self.node.network.score()
+
+                        if score > current_score: self.node.group.controller = address
+
+                break
+                
+            else: print('Grouping node...')
