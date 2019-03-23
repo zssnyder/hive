@@ -7,7 +7,7 @@ import random
 
 from hive.core.mesh import classes as mesh
 
-from hive.plugins.commands.connect import ConnectCommand
+from hive.core.mesh.commands import ConnectCommand
 
 
 logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s', )

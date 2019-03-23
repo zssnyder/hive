@@ -25,12 +25,12 @@ class mesh(object):
     def __init__(self, configuration=Configuration()):
         """Initialize mesh object"""
 
+        # Set network configuration values
+        self.configuration = configuration
+
         # Set node configuration
         self.node = Node()
         self.node.connection = self.configuration.plugins['connection']
-
-        # Set network configuration values
-        mesh.configuration = configuration
 
         # Packet data structures
         self.requests = collections.deque()
@@ -200,11 +200,11 @@ class mesh(object):
             elif int(time.time()) % self.configuration.group_interval == 0:
                 
                 # Manage network grouping
-                self.node.update_group()
+                self.update_group()
 
     # ------- Outgoing ----------------
 
-    def try_request(self, command, dest=Address(mesh.configuration.wildcard), timeout=5.0, responses=1):
+    def try_request(self, command, dest=Address(Configuration.wildcard), timeout=5.0, responses=1):
         """Register custom handler for event"""
         event = threading.Event()
         self.response[str(command.id)] = event
