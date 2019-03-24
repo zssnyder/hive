@@ -28,5 +28,6 @@ window = builder.get_object("Swarm Control")
 #builder.connect_signals(Handler())
 #Runs the gtk main method, which renders out the UI and waits for user input.
 
+window.show_all()
 Gtk.main()
 
