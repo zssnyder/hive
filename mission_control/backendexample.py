@@ -6,7 +6,13 @@ from gi.repository import Gtk
 #=======================================================
 #The handler class listens for signals from the UI.
 #Each method in the class is an event handler.
-#class Handler:
+class Handler:
+
+
+    def drone1_clicked(self, button):
+        builder = Gtk.Builder()
+        status1 = builder.get_object("status1")
+        status1.set_visible("false")
 
 #Best practices: Name event handlers starting with 'on'.
 # Then the name of the control that is signalling.
@@ -25,7 +31,7 @@ builder.add_from_file("mission_control/UI.glade")
 window = builder.get_object("Swarm Control")
 #connect signals from .glade file to event handlers.
 #For this to work the signals must have the name of the event handler in the "handler" field in glade.
-#builder.connect_signals(Handler())
+builder.connect_signals(Handler())
 #Runs the gtk main method, which renders out the UI and waits for user input.
 
 window.show_all()

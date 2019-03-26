@@ -31,6 +31,41 @@
     <property name="can_focus">False</property>
     <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
   </object>
+  <object class="GtkTextBuffer" id="statusDrone1">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone2">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone3">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone4">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
+  <object class="GtkTextBuffer" id="statusDrone5">
+    <property name="text" translatable="yes">Status: 	Idle
+X:		43
+Y:		23
+Z:		20
+Bat:	99%</property>
+  </object>
   <object class="GtkApplicationWindow" id="Swarm Control">
     <property name="width_request">950</property>
     <property name="height_request">850</property>
@@ -228,6 +263,7 @@
                     <property name="image">DroneImage1</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="drone1_clicked" swapped="no"/>
                     <style>
                       <class name="DroneOne"/>
                     </style>
@@ -618,40 +654,5 @@
     <style>
       <class name="BColor"/>
     </style>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone1">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone2">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone3">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone4">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
-  </object>
-  <object class="GtkTextBuffer" id="statusDrone5">
-    <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
   </object>
 </interface>
