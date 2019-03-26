@@ -2,6 +2,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 #=======================================================
 #The handler class listens for signals from the UI.
@@ -14,6 +15,18 @@ class Handler:
         self.status3 = builder.get_object("status3")
         self.status4 = builder.get_object("status4")
         self.status5 = builder.get_object("status5")
+
+        style_provider = Gtk.CssProvider()
+
+        css = open('mission_control/UI.css', 'rb') # rb needed for python 3 support
+        css_data = css.read()
+        css.close()
+
+        style_provider.load_from_data(css_data)
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), style_provider,     
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     def hideStatus(self):
         self.status1.hide()
@@ -52,6 +65,8 @@ class Handler:
         else:
             self.status5.show()
     
+    def onWindowDestroy(self, *args):
+        Gtk.main_quit()
     
 
 #Best practices: Name event handlers starting with 'on'.
