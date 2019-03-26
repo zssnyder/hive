@@ -302,6 +302,7 @@ Bat:	99%</property>
                     <property name="image">Droneimage2</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="drone2_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -336,6 +337,7 @@ Bat:	99%</property>
                     <property name="image">Droneimage3</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="drone3_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -370,6 +372,7 @@ Bat:	99%</property>
                     <property name="image">Droneimage4</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="drone4_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -404,6 +407,7 @@ Bat:	99%</property>
                     <property name="image">Droneimage5</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="drone5_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
