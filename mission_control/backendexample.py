@@ -20,7 +20,7 @@ from gi.repository import Gtk
 #create builder object.
 builder = Gtk.Builder()
 #Add the .glade file to the builder.
-builder.add_from_file("UI.glade")
+builder.add_from_file("mission_control/UI.glade")
 #objects can be created to manipulate UI elements.
 window = builder.get_object("Swarm Control")
 #connect signals from .glade file to event handlers.
