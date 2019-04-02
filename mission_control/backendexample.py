@@ -67,6 +67,9 @@ class Handler:
     
     def onWindowDestroy(self, *args):
         Gtk.main_quit()
+
+    def onQuitClicked(self,button):
+        Gtk.main_quit()
     
 
 #Best practices: Name event handlers starting with 'on'.
