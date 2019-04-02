@@ -3,6 +3,8 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
+from functools import reduce
+
 class Network(object):
     """Network class describing network topology
     
@@ -21,24 +23,32 @@ class Network(object):
     # ----- Signals -------
     def add_signal(self, address, signal):
         """Add new address and rssi to network or override existing rssi"""
-        self.signals[address] = signal
+        self.signals[str(address)] = signal
     
     def remove_signal(self, address):
         """Remove address or signal from network"""
-        if address in self.signals.keys():
-            del self.signals[address]
+        if str(address) in self.signals.keys():
+            del self.signals[str(address)]
 
     # ----- Groups --------
     def add_group(self, address, group):
         """Add new group to network or override existing group"""
-        self.groups[address] = group
+        self.groups[str(address)] = group
+
+    def remove_group(self, address, group):
+        """Remove a group from network table"""
+        if str(address) in self.groups.keys():
+            del self.groups[str(address)]
 
     def get_group(self, address):
         """Get route for destination address"""
-        return self.groups[address]
+        return self.groups[str(address)]
     
     # ----- Addresses ------
     def addresses(self):
         """Get value sorted list of known addresses"""
         return [address for address, in sorted(self.signals.items(), lambda kv: kv[1])]
 
+    def score(self):
+        """Calculates the overall connection score of the network"""
+        return reduce(lambda x, y: abs(x) + abs(y), self.signals.items())

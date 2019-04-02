@@ -1,2 +1,2 @@
-from hive import core
-from hive import plugins
+from . import core
+from . import peripherals

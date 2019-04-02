@@ -18,7 +18,7 @@ class Group(object):
         if id is not None:
             self.id = id
         else:
-            self.id = uuid4()
+            self.id = uuid4().hex
         
         self.controller = controller
 
@@ -53,3 +53,9 @@ class Group(object):
             self.addresses.remove(address)
             return True
         return False
+
+    # ----- Overrides -------
+
+    def __str__(self):
+        """String representation of the group"""
+        return str(self.addresses)

@@ -3,6 +3,8 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
+import threading
+
 class Connection(object):
     """Defines the lowest level radio connection interface. 
     
@@ -15,13 +17,12 @@ class Connection(object):
     * read()
     """
 
-    def __init__(self, baud=9600):
+    def __init__(self):
         """Initialize instance of connection
 
         * baud - baud rate (default 9600)
         """
-        self.baud = baud
-        pass
+        self.lock = threading.Lock()
 
     def open(self):
         """Opens connection to mesh network"""

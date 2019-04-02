@@ -2,4 +2,4 @@
 from hive.core.mesh.classes import *
 
 # Methods
-from hive.core.mesh.start import start
+from .mesh import mesh
