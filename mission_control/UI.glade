@@ -2,9 +2,14 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
-  <!-- interface-css-provider-path UI.css -->
+  <!-- interface-css-provider-path Default.css -->
   <object class="GtkTextBuffer" id="DataLog">
     <property name="text" translatable="yes">This is a test.</property>
+  </object>
+  <object class="GtkImage" id="DroneAllimage">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">iconfinder_tech_0011_4023881.png</property>
   </object>
   <object class="GtkImage" id="DroneImage1">
     <property name="visible">True</property>
@@ -66,7 +71,7 @@ Y:		23
 Z:		20
 Bat:	99%</property>
   </object>
-  <object class="GtkApplicationWindow" id="Swarm Control">
+  <object class="GtkApplicationWindow" id="Swarm_Control">
     <property name="width_request">950</property>
     <property name="height_request">850</property>
     <property name="can_focus">False</property>
@@ -74,7 +79,6 @@ Bat:	99%</property>
     <property name="window_position">center</property>
     <property name="hide_titlebar_when_maximized">True</property>
     <property name="icon">drone.png</property>
-    <signal name="destroy" handler="onWindowDestroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
@@ -205,6 +209,36 @@ Bat:	99%</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="Theme0">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Default Theme</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="Theme1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Light Theme</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="Theme2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Dark Theme</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -247,196 +281,225 @@ Bat:	99%</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkButtonBox" id="DroneStatus">
+              <object class="GtkBox" id="box3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">5</property>
                 <property name="margin_right">10</property>
-                <property name="margin_top">5</property>
                 <property name="orientation">vertical</property>
-                <property name="layout_style">start</property>
                 <child>
-                  <object class="GtkToggleButton" id="Drone1">
-                    <property name="label" translatable="yes">Drone-1</property>
+                  <object class="GtkButtonBox" id="DroneStatus">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="image">DroneImage1</property>
-                    <property name="image_position">top</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="drone1_clicked" swapped="no"/>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
+                    <property name="orientation">vertical</property>
+                    <property name="layout_style">start</property>
+                    <child>
+                      <object class="GtkToggleButton" id="Drone1">
+                        <property name="label" translatable="yes">Drone-1</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">DroneImage1</property>
+                        <property name="image_position">top</property>
+                        <property name="always_show_image">True</property>
+                        <style>
+                          <class name="DroneOne"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkTextView" id="status1">
+                        <property name="can_focus">True</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="editable">False</property>
+                        <property name="buffer">statusDrone1</property>
+                        <property name="overwrite">True</property>
+                        <style>
+                          <class name="BColor"/>
+                          <class name="Status"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                        <property name="non_homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="Drone2">
+                        <property name="label" translatable="yes">Drone-2</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">Droneimage2</property>
+                        <property name="image_position">top</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkTextView" id="status2">
+                        <property name="can_focus">True</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="editable">False</property>
+                        <property name="buffer">statusDrone2</property>
+                        <property name="overwrite">True</property>
+                        <style>
+                          <class name="BColor"/>
+                          <class name="Status"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                        <property name="non_homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="Drone3">
+                        <property name="label" translatable="yes">Drone-3</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">Droneimage3</property>
+                        <property name="image_position">top</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkTextView" id="status3">
+                        <property name="can_focus">True</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="editable">False</property>
+                        <property name="buffer">statusDrone3</property>
+                        <property name="overwrite">True</property>
+                        <style>
+                          <class name="BColor"/>
+                          <class name="Status"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">5</property>
+                        <property name="non_homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="Drone4">
+                        <property name="label" translatable="yes">Drone4</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">Droneimage4</property>
+                        <property name="image_position">top</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">6</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkTextView" id="status4">
+                        <property name="can_focus">True</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="editable">False</property>
+                        <property name="buffer">statusDrone4</property>
+                        <property name="overwrite">True</property>
+                        <style>
+                          <class name="BColor"/>
+                          <class name="Status"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">7</property>
+                        <property name="non_homogeneous">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="Drone5">
+                        <property name="label" translatable="yes">Drone-5</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">Droneimage5</property>
+                        <property name="image_position">top</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">8</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkTextView" id="status5">
+                        <property name="can_focus">True</property>
+                        <property name="pixels_above_lines">1</property>
+                        <property name="editable">False</property>
+                        <property name="buffer">statusDrone5</property>
+                        <property name="overwrite">True</property>
+                        <style>
+                          <class name="BColor"/>
+                          <class name="Status"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">9</property>
+                        <property name="non_homogeneous">True</property>
+                      </packing>
+                    </child>
                     <style>
-                      <class name="DroneOne"/>
+                      <class name="BColor"/>
                     </style>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkTextView" id="status1">
+                  <object class="GtkToggleButton" id="AllDrones">
+                    <property name="label" translatable="yes">All Drones</property>
+                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="pixels_above_lines">3</property>
-                    <property name="editable">False</property>
-                    <property name="buffer">statusDrone1</property>
-                    <property name="overwrite">True</property>
-                    <style>
-                      <class name="BColor"/>
-                      <class name="Status"/>
-                    </style>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="image">DroneAllimage</property>
+                    <property name="image_position">top</property>
+                    <property name="always_show_image">True</property>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
+                    <property name="pack_type">end</property>
                     <property name="position">1</property>
-                    <property name="non_homogeneous">True</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkToggleButton" id="Drone2">
-                    <property name="label" translatable="yes">Drone-2</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="image">Droneimage2</property>
-                    <property name="image_position">top</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="drone2_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTextView" id="status2">
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
-                    <property name="buffer">statusDrone2</property>
-                    <property name="overwrite">True</property>
-                    <style>
-                      <class name="BColor"/>
-                      <class name="Status"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">3</property>
-                    <property name="non_homogeneous">True</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="Drone3">
-                    <property name="label" translatable="yes">Drone-3</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="image">Droneimage3</property>
-                    <property name="image_position">top</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="drone3_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTextView" id="status3">
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
-                    <property name="buffer">statusDrone3</property>
-                    <property name="overwrite">True</property>
-                    <style>
-                      <class name="BColor"/>
-                      <class name="Status"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">5</property>
-                    <property name="non_homogeneous">True</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="Drone4">
-                    <property name="label" translatable="yes">Drone4</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="image">Droneimage4</property>
-                    <property name="image_position">top</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="drone4_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">6</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTextView" id="status4">
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
-                    <property name="buffer">statusDrone4</property>
-                    <property name="overwrite">True</property>
-                    <style>
-                      <class name="BColor"/>
-                      <class name="Status"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">7</property>
-                    <property name="non_homogeneous">True</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkToggleButton" id="Drone5">
-                    <property name="label" translatable="yes">Drone-5</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="image">Droneimage5</property>
-                    <property name="image_position">top</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="drone5_clicked" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">8</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTextView" id="status5">
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
-                    <property name="buffer">statusDrone5</property>
-                    <property name="overwrite">True</property>
-                    <style>
-                      <class name="BColor"/>
-                      <class name="Status"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">9</property>
-                    <property name="non_homogeneous">True</property>
-                  </packing>
-                </child>
-                <style>
-                  <class name="BColor"/>
-                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
