@@ -10,15 +10,15 @@ from gi.repository import Gdk
 class Handler:
     def __init__(self):
         self.builder = Gtk.Builder()
-        self.status1 = builder.get_object("status1")
-        self.status2 = builder.get_object("status2")
-        self.status3 = builder.get_object("status3")
-        self.status4 = builder.get_object("status4")
-        self.status5 = builder.get_object("status5")
+        self.status1 = self.builder.get_object("status1")
+        self.status2 = self.builder.get_object("status2")
+        self.status3 = self.builder.get_object("status3")
+        self.status4 = self.builder.get_object("status4")
+        self.status5 = self.builder.get_object("status5")
 
         style_provider = Gtk.CssProvider()
 
-        css = open('mission_control/UI.css', 'rb') # rb needed for python 3 support
+        css = open('mission_control/Default.css', 'rb') # rb needed for python 3 support
         css_data = css.read()
         css.close()
 
@@ -81,18 +81,20 @@ class Handler:
 
 
 #=======================================================
-#create builder object.
-builder = Gtk.Builder()
-#Add the .glade file to the builder.
-builder.add_from_file("mission_control/UI.glade")
-#objects can be created to manipulate UI elements.
-window = builder.get_object("Swarm Control")
-#connect signals from .glade file to event handlers.
-#For this to work the signals must have the name of the event handler in the "handler" field in glade.
-builder.connect_signals(Handler())
-#Runs the gtk main method, which renders out the UI and waits for user input.
+class UI():
+    def __init__(self):
+        #create builder object.
+        self.builder = Gtk.Builder()
+        #Add the .glade file to the builder.
+        self.builder.add_from_file("mission_control/UI.glade")
+        #objects can be created to manipulate UI elements.
+        self.window = self.builder.get_object("Swarm_Control")
+        #connect signals from .glade file to event handlers.
+        #For this to work the signals must have the name of the event handler in the "handler" field in glade.
+        self.builder.connect_signals(Handler())
+        #Runs the gtk main method, which renders out the UI and waits for user input.
 
-window.show_all()
-Handler.hideStatus(Handler())
-Gtk.main()
+        self.window.show_all()
+        Handler.hideStatus(Handler())
+        self.Gtk.main()
 
