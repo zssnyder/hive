@@ -4,17 +4,23 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-import threading
+import threading, queue
 import UI
+from hive.core.mesh import mesh
+from hive.core.swarm import swarm
 
 class UIThread(threading.Thread):
     def __init__(self):
-        UI.UI()
+        threading.Thread.__init__(self)
+        print("UI init")
+    
+    def run(self):
+        global interface
+        interface.startUI()
 
-    def runFile(self):
-        fileStream = open("mission_control/backendexample.py").read()
-        script = compile(fileStream,"mission_control/backendexample.py","exec")
-        exec(script)
-
+logQueue = queue.Queue()
+interface = UI.InitializeUI()
 uithread = UIThread()
+interface.addToQueue("test",logQueue)
+
 uithread.start()

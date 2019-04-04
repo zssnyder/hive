@@ -1,20 +1,24 @@
 #imports gi,gtk 3.0
-import gi
+import gi,queue
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GObject
 
 #=======================================================
 #The handler class listens for signals from the UI.
 #Each method in the class is an event handler.
 class Handler:
+    logQueue = queue.Queue()
     def __init__(self):
-        self.builder = Gtk.Builder()
-        self.status1 = self.builder.get_object("status1")
-        self.status2 = self.builder.get_object("status2")
-        self.status3 = self.builder.get_object("status3")
-        self.status4 = self.builder.get_object("status4")
-        self.status5 = self.builder.get_object("status5")
+        global builder
+        self.status1 = builder.get_object("status1")
+        self.status2 = builder.get_object("status2")
+        self.status3 = builder.get_object("status3")
+        self.status4 = builder.get_object("status4")
+        self.status5 = builder.get_object("status5")
+
+        source = GObject.timeout_add(10000,self.readQueue,self.logQueue)
 
         style_provider = Gtk.CssProvider()
 
@@ -70,31 +74,39 @@ class Handler:
 
     def onQuitClicked(self,button):
         Gtk.main_quit()
-    
 
-#Best practices: Name event handlers starting with 'on'.
-# Then the name of the control that is signalling.
-# Last is the name of the signal. i.e. onButtonClicked
+    def insertText(text):
+        print("test")
+        textBuffer = builder.get_object("DataLog")
+        endBuffer = textBuffer.get_end_iter()
+        textBuffer.insert(endBuffer,"\n"+text)
 
-
-
-
-
+    def readQueue(self,q):
+        text = q.get(True,0.1)
+        print("test")
+        if text is None:
+            self.insertText(text)
 #=======================================================
-class UI():
+class InitializeUI():
     def __init__(self):
-        #create builder object.
-        self.builder = Gtk.Builder()
-        #Add the .glade file to the builder.
-        self.builder.add_from_file("mission_control/UI.glade")
-        #objects can be created to manipulate UI elements.
-        self.window = self.builder.get_object("Swarm_Control")
+        global builder
+        global window
         #connect signals from .glade file to event handlers.
         #For this to work the signals must have the name of the event handler in the "handler" field in glade.
-        self.builder.connect_signals(Handler())
+        builder.connect_signals(Handler())
         #Runs the gtk main method, which renders out the UI and waits for user input.
-
-        self.window.show_all()
+        window.show_all()
         Handler.hideStatus(Handler())
-        self.Gtk.main()
 
+    def startUI(self):
+        Gtk.main()
+    
+    def addToQueue(self,objToAdd,q):
+        q.put(objToAdd,True,1)
+
+#create builder object
+builder = Gtk.Builder()
+#Add the .glade file to the builder.
+builder.add_from_file("mission_control/UI.glade")
+#objects can be created to manipulate UI elements.
+window = builder.get_object("Swarm_Control")
