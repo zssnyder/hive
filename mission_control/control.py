@@ -5,9 +5,9 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import threading, queue
-import UI
-from hive.core.mesh import mesh
-from hive.core.swarm import swarm
+from UI import UI
+#from hive.core.mesh import mesh
+#from hive.core.swarm import swarm
 
 class UIThread(threading.Thread):
     def __init__(self):
@@ -19,8 +19,9 @@ class UIThread(threading.Thread):
         interface.startUI()
 
 logQueue = queue.Queue()
-interface = UI.InitializeUI()
+interface = UI.InitializeUI(logQueue)
 uithread = UIThread()
-interface.addToQueue("test",logQueue)
-
 uithread.start()
+
+interface.addToQueue("message 1.")
+interface.addToQueue("message 2.")
