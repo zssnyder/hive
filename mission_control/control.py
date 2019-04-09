@@ -19,8 +19,9 @@ class UIThread(threading.Thread):
         interface.startUI()
 
 logQueue = queue.Queue()
-interface = UI.InitializeUI()
+interface = UI.InitializeUI(logQueue)
 uithread = UIThread()
-interface.addToQueue("test",logQueue)
-
 uithread.start()
+
+interface.addToQueue("message 1.")
+interface.addToQueue("message 2.")

@@ -9,16 +9,16 @@ from gi.repository import GObject
 #The handler class listens for signals from the UI.
 #Each method in the class is an event handler.
 class Handler:
-    logQueue = queue.Queue()
-    def __init__(self):
+    def __init__(self,q):
         global builder
+        self.logQ = q
         self.status1 = builder.get_object("status1")
         self.status2 = builder.get_object("status2")
         self.status3 = builder.get_object("status3")
         self.status4 = builder.get_object("status4")
         self.status5 = builder.get_object("status5")
 
-        #source = GObject.timeout_add(10000,self.readQueue,self.logQueue)
+        self.source = GObject.timeout_add(1000,self.readQueue,self.logQ)
 
         style_provider = Gtk.CssProvider()
 
@@ -75,35 +75,38 @@ class Handler:
     def onQuitClicked(self,button):
         Gtk.main_quit()
 
-    def insertText(text):
-        print("test")
+    def insertText(self,text):
         textBuffer = builder.get_object("DataLog")
         endBuffer = textBuffer.get_end_iter()
         textBuffer.insert(endBuffer,"\n"+text)
 
-    #def readQueue(self):
-        #if not logQueue.empty
-        #   text = logQueue.get(True,0.1)
-        #print("test")
-        #if text is None:
-        #    self.insertText(text)
+    def readQueue(self,q):
+        text = None
+        if not q.empty():
+           text = q.get(True,1)
+           q.task_done()
+        if not text is None:
+            self.insertText(text)
+        return True
 #=======================================================
 class InitializeUI():
-    def __init__(self):
+    def __init__(self,logQueue):
         global builder
         global window
+        self.logQ = logQueue
+        self.hand = Handler(self.logQ)
         #connect signals from .glade file to event handlers.
         #For this to work the signals must have the name of the event handler in the "handler" field in glade.
-        builder.connect_signals(Handler())
+        builder.connect_signals(self.hand)
         #Runs the gtk main method, which renders out the UI and waits for user input.
         window.show_all()
-        Handler.hideStatus(Handler())
+        self.hand.hideStatus()
 
     def startUI(self):
         Gtk.main()
     
-    def addToQueue(self,objToAdd,q):
-        q.put(objToAdd,True,1)
+    def addToQueue(self,objToAdd):
+        self.logQ.put(objToAdd,True,1)
 
 #create builder object
 builder = Gtk.Builder()
