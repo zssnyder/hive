@@ -81,8 +81,9 @@ class Handler:
         endBuffer = textBuffer.get_end_iter()
         textBuffer.insert(endBuffer,"\n"+text)
 
-    def readQueue(self,q):
-        text = q.get(True,0.1)
+    def readQueue(self):
+        if not logQueue.empty
+            text = logQueue.get(True,0.1)
         print("test")
         if text is None:
             self.insertText(text)
