@@ -18,11 +18,11 @@ class Handler:
         self.status4 = builder.get_object("status4")
         self.status5 = builder.get_object("status5")
 
-        source = GObject.timeout_add(10000,self.readQueue,self.logQueue)
+        #source = GObject.timeout_add(10000,self.readQueue,self.logQueue)
 
         style_provider = Gtk.CssProvider()
 
-        css = open('mission_control/Default.css', 'rb') # rb needed for python 3 support
+        css = open('mission_control/UI/Default.css', 'rb') # rb needed for python 3 support
         css_data = css.read()
         css.close()
 
@@ -81,12 +81,12 @@ class Handler:
         endBuffer = textBuffer.get_end_iter()
         textBuffer.insert(endBuffer,"\n"+text)
 
-    def readQueue(self):
-        if not logQueue.empty
-            text = logQueue.get(True,0.1)
-        print("test")
-        if text is None:
-            self.insertText(text)
+    #def readQueue(self):
+        #if not logQueue.empty
+        #   text = logQueue.get(True,0.1)
+        #print("test")
+        #if text is None:
+        #    self.insertText(text)
 #=======================================================
 class InitializeUI():
     def __init__(self):
@@ -108,6 +108,6 @@ class InitializeUI():
 #create builder object
 builder = Gtk.Builder()
 #Add the .glade file to the builder.
-builder.add_from_file("mission_control/UI.glade")
+builder.add_from_file("mission_control/UI/UI.glade")
 #objects can be created to manipulate UI elements.
 window = builder.get_object("Swarm_Control")
