@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
-  <!-- interface-css-provider-path Default.css -->
+  <!-- interface-css-provider-path Dark.css -->
   <object class="GtkTextBuffer" id="DataLog">
     <property name="text" translatable="yes">This is a test.</property>
   </object>
@@ -44,38 +44,38 @@
   </object>
   <object class="GtkTextBuffer" id="statusDrone1">
     <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
+X:		0
+Y:		0
+Z:		0
+Bat:	100%</property>
   </object>
   <object class="GtkTextBuffer" id="statusDrone2">
     <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
+X:		0
+Y:		0
+Z:		0
+Bat:	100%</property>
   </object>
   <object class="GtkTextBuffer" id="statusDrone3">
     <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
+X:		0
+Y:		0
+Z:		0
+Bat:	100%</property>
   </object>
   <object class="GtkTextBuffer" id="statusDrone4">
     <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
+X:		0
+Y:		0
+Z:		0
+Bat:	100%</property>
   </object>
   <object class="GtkTextBuffer" id="statusDrone5">
     <property name="text" translatable="yes">Status: 	Idle
-X:		43
-Y:		23
-Z:		20
-Bat:	99%</property>
+X:		0
+Y:		0
+Z:		0
+Bat:	100%</property>
   </object>
   <object class="GtkApplicationWindow" id="Swarm_Control">
     <property name="width_request">950</property>
@@ -574,7 +574,7 @@ Bat:	99%</property>
                     <property name="orientation">vertical</property>
                     <property name="baseline_position">bottom</property>
                     <child>
-                      <object class="GtkGrid" id="grid1">
+                      <object class="GtkGrid" id="PresetButtons">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">center</property>
@@ -683,14 +683,16 @@ Bat:	99%</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButtonBox" id="buttonbox1">
+                      <object class="GtkButtonBox" id="Coordinates">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="margin_bottom">5</property>
                         <property name="layout_style">center</property>
                         <child>
                           <object class="GtkEntry" id="XentryBox">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="placeholder_text" translatable="yes">0</property>
                             <property name="input_purpose">digits</property>
                           </object>
                           <packing>
@@ -700,9 +702,10 @@ Bat:	99%</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry2">
+                          <object class="GtkEntry" id="YentryBox">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="placeholder_text" translatable="yes">0</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -711,9 +714,10 @@ Bat:	99%</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry3">
+                          <object class="GtkEntry" id="ZentryBox">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="placeholder_text" translatable="yes">0</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -722,8 +726,8 @@ Bat:	99%</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="button1">
-                            <property name="label" translatable="yes">button</property>
+                          <object class="GtkButton" id="ConfirmButton">
+                            <property name="label" translatable="yes">Confirm</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -743,17 +747,17 @@ Bat:	99%</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButtonBox" id="buttonbox2">
+                      <object class="GtkButtonBox" id="CoordinateLabels">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="spacing">89</property>
+                        <property name="spacing">90</property>
                         <property name="homogeneous">True</property>
                         <property name="layout_style">center</property>
                         <child>
-                          <object class="GtkLabel" id="label1">
+                          <object class="GtkLabel" id="Xlabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">label</property>
+                            <property name="label" translatable="yes">X</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -762,10 +766,10 @@ Bat:	99%</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="label2">
+                          <object class="GtkLabel" id="Ylabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">label</property>
+                            <property name="label" translatable="yes">Y</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -774,10 +778,10 @@ Bat:	99%</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="label3">
+                          <object class="GtkLabel" id="Zlabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">label</property>
+                            <property name="label" translatable="yes">Z</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -786,10 +790,9 @@ Bat:	99%</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="label4">
+                          <object class="GtkLabel" id="Blanklabel">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">label</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -801,6 +804,7 @@ Bat:	99%</property>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
+                        <property name="pack_type">end</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
