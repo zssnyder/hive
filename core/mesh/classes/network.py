@@ -3,8 +3,6 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
-from functools import reduce
-
 class Network(object):
     """Network class describing network topology
     
@@ -48,7 +46,3 @@ class Network(object):
     def addresses(self):
         """Get value sorted list of known addresses"""
         return [address for address, in sorted(self.signals.items(), lambda kv: kv[1])]
-
-    def score(self):
-        """Calculates the overall connection score of the network"""
-        return reduce(lambda x, y: abs(x) + abs(y), self.signals.items())

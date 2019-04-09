@@ -20,4 +20,4 @@ class GroupHandler(handler.Handler):
     def execute(self, parameters, source):
         """Execute grouping command handler"""
 
-        return commands.GroupCommand(self.node.group, self.node.network.score())
+        return commands.GroupCommand(self.node.group, self.node.score())

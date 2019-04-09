@@ -3,6 +3,8 @@ __date__ = "1/23/19"
 
 import threading
 from collections import deque
+from functools import reduce
+
 
 # Core 
 from hive.core.mesh import classes
@@ -44,6 +46,12 @@ class Node(object):
         # Is node connected to the network
         self.is_connnected = False
 
+    # ----- Attributes -------------
+
+    def score(self):
+        """Calculates the overall connection score of the network"""
+        non_group_signals = [signal for address, signal in self.network.signals if address not in self.group.addresses]
+        return reduce(lambda x, y: abs(x) + abs(y), non_group_signals)
 
     # ----- TRANSMISSION -----------
 

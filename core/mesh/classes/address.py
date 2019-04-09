@@ -23,7 +23,7 @@ class Address(object):
         """Overrides equatable relation"""
         if isinstance(other, Address):
             return self.id == other.id
-        else: 
+        elif isinstance(other, str): 
             return self.id == other
         return False
     
@@ -31,6 +31,6 @@ class Address(object):
         """Overrides not equatable relation"""
         if isinstance(other, Address):
             return self.id != other.id
-        else: 
+        elif isinstance(other, str): 
             return self.id != other
         return False

@@ -1,9 +1,14 @@
 __author__ = 'Zack Snyder'
 __date__ = '3/22/19'
 
-from digi.xbee.devices import XBeeDevice
+import time
 
+from digi.xbee import devices
+from digi.xbee.reader import XBeeMessage
+
+from hive.core.mesh import Configuration
 from hive.core.mesh import Connection
+from hive.core.mesh.classes import exceptions
 
 class XBeeConnection(Connection):
 
@@ -13,7 +18,7 @@ class XBeeConnection(Connection):
         * port = /dev/tty* port connection
         * baud = baud rate of device
         """
-        self.device = XBeeDevice(port, baud)
+        self.device = devices.XBeeDevice(port, baud)
 
         super(XBeeConnection, self).__init__()
 
@@ -26,10 +31,34 @@ class XBeeConnection(Connection):
         """Close a connection"""
         self.device.close()
 
-    def write(self, message):
+    def write(self, message, dest):
         """Write to network connection"""
-        self.device.send_packet(message)
+        
+        if str(dest) == Configuration.wildcard:
+            # Get network information
+            network = self.device.get_network()
+
+            # Run discovery process for XBee network
+            network.start_discovery_process()
+            while network.is_discovery_running():
+                time.sleep(0.5)
+
+            # Get list of remote devices
+            devices = network.get_devices()
+
+            # Send message to each device in network
+            for remote in devices:
+                self.device.send_data(remote, message)
+        else: 
+
+            remote_device = devices.RemoteXBeeDevice(self.device, x64bit_addr=dest)
+            self.device.send_data(remote_device, message)
 
     def read(self, timeout=None):
         """Read xbee data"""
-        return self.device.read_data(timeout)
+        message = self.device.read_data(timeout)
+
+        if message is None:
+            raise exceptions.ReadTimeoutException(['No data available'])
+        else: 
+            return message.data.decode("utf8"), message

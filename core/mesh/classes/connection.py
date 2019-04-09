@@ -32,7 +32,7 @@ class Connection(object):
         """Closes connection to mesh network"""
         raise NotImplementedError( 'Needs implementation' )
 
-    def write (self, message=""): 
+    def write (self, message, dest): 
         """Writes message to mesh network
         
         * message - string message to send over the network

@@ -10,7 +10,7 @@ from hive.core.mesh import classes
 class ConnectCommand(classes.Command):
     """Default command used to connect to the mesh network"""
 
-    def __init__(self, max_group_size, is_ground_station):
+    def __init__(self):
         """Initialize ConnectCommand subclass of Command"""
         
         try:

@@ -3,6 +3,9 @@
 import threading
 import time
 import collections
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s', )
 
 from hive.core.mesh.classes import Address
 from hive.core.mesh.classes import Node
@@ -102,20 +105,20 @@ class mesh(object):
                 packet = Packet.try_parse(message)
 
             except exceptions.ReadTimeoutException as rte:
-                print("No packet read")
-                print(rte.args)
+                logging.debug("No packet read")
+                logging.debug(rte.args)
 
             except exceptions.CorruptPacketException as cpe:
-                print("Packet is corrupted")
-                print(cpe.args)
+                logging.debug("Packet is corrupted")
+                logging.debug(cpe.args)
 
             except TypeError as te:
-                print("Packet not properly encoded")
-                print(te.args)
+                logging.debug("Packet not properly encoded")
+                logging.debug(te.args)
 
             except Exception as exc:
-                print("Unknown exception")
-                print(exc.args)
+                logging.debug("Unknown exception")
+                logging.debug(exc.args)
 
             else: 
                 # Add signal to network
@@ -140,7 +143,7 @@ class mesh(object):
                 self.packet_history.appendleft(packet.command.id)
 
                 self.node.connection.open()
-                self.node.connection.write(str(packet) + packet.crc16())
+                self.node.connection.write(str(packet) + packet.crc16(), packet.route.next_addr)
                 self.node.connection.close()
 
     def _handle(self):
@@ -156,8 +159,8 @@ class mesh(object):
                     command_type = packet.command.parameters['name']
                     handler = self.handlers[command_type]
                 except KeyError as ke:
-                    print('Could not find handler key for request or handler is not registered')
-                    print(ke.args)
+                    logging.debug('Could not find handler key for request or handler is not registered')
+                    logging.debug(ke.args)
                 else:
                     # Respond to request
                     response = handler.execute(packet.command, packet.route.source_addr)
@@ -195,7 +198,7 @@ class mesh(object):
                     try:
                         self.node.try_relay(packet)
                     except Exception as e:
-                        print(e.args)
+                        logging.debug(e.args)
 
             elif int(time.time()) % self.configuration.group_interval == 0:
                 
@@ -276,7 +279,7 @@ class mesh(object):
             try: 
                 response, source = self.try_request(command)
             except exceptions.RequestTimeoutException as qte:
-                print(qte.args)
+                logging.debug(qte.args)
                 connection_attempts += 1
             else:
 
@@ -365,10 +368,10 @@ class mesh(object):
                     # Current group controller is self
                     elif str(address) in responses.keys() and address == self.node.address:
                         score = responses[str(address)].parameters['score']
-                        current_score = self.node.network.score()
+                        current_score = self.node.score()
 
                         if score > current_score: self.node.group.controller = address
 
                 break
                 
-            else: print('Grouping node...')
+            else: logging.debug('Grouping node...')
