@@ -38,6 +38,13 @@ class Handler:
         self.status3.hide()
         self.status4.hide()
         self.status5.hide()
+    
+    def allDrones_clicked(self, button):
+        self.status1.show()
+        self.status2.show()
+        self.status3.show()
+        self.status4.show()
+        self.status5.show()
 
     def drone1_clicked(self, button):     
         if(self.status1.get_visible()):
