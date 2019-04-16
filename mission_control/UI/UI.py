@@ -32,6 +32,9 @@ class Handler:
             Gdk.Screen.get_default(), style_provider,     
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
+    def writeToStatus(self,textbuff,sts,x,y,z,bat):
+        textbuff.set_text("Status: "+sts+"\n"+"X: "+x+"\n"+"Y: "+y+"\n"+"Z: "+z+"\n"+"Bat: "+bat)
+
     def hideStatus(self):
         self.status1.hide()
         self.status2.hide()
