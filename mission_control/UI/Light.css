@@ -46,3 +46,9 @@ GtkToggleButton:checked{
         background: lawngreen;
         color: black;
 }
+.Launch:hover{
+        background: greenyellow;
+}
+.Launch:checked{
+        background: lawngreen;
+}
