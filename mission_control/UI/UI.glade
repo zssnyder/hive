@@ -456,7 +456,7 @@ Bat:	100%</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="AllDrones">
+                  <object class="GtkToggleButton" id="allDrones">
                     <property name="label" translatable="yes">All Drones</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -464,6 +464,7 @@ Bat:	100%</property>
                     <property name="image">DroneAllimage</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="allDrones_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
