@@ -12,6 +12,9 @@ from hive.core.mesh.classes import exceptions
 
 class XBeeConnection(Connection):
 
+    def get_address(self):
+        return self.device.get_64bit_addr()
+
     def __init__(self, port, baud=9600):
         """Initialize XBeeConnection class
 
@@ -19,7 +22,7 @@ class XBeeConnection(Connection):
         * baud = baud rate of device
         """
         self.device = devices.XBeeDevice(port, baud)
-
+        self.network = self.device.get_network()
         super(XBeeConnection, self).__init__()
 
 

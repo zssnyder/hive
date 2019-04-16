@@ -270,30 +270,33 @@ class mesh(object):
 
         connection_attempts = 0
 
-        while connection_attempts < mesh.configuration.connection_timeout:
+        if Configuration.is_ground_station:
+            while connection_attempts < mesh.configuration.connection_timeout:
 
-            # Create a connect command 
-            command = commands.ConnectCommand()
+                # Create a connect command 
+                command = commands.ConnectCommand()
 
-            # Broadcast connect command to network
-            try: 
-                response, source = self.try_request(command)
-            except exceptions.RequestTimeoutException as qte:
-                logging.debug(qte.args)
-                connection_attempts += 1
-            else:
+                # Broadcast connect command to network
+                try: 
+                    response, source = self.try_request(command)
+                except exceptions.RequestTimeoutException as qte:
+                    logging.debug(qte.args)
+                    connection_attempts += 1
+                else:
 
-                self.is_connected = True
+                    self.is_connected = True
 
-                # Set configuration
-                self.configuration.ground_station_address = source
-                self.configuration.ground_station_ip = response.parameters['ip']
-                self.configuration.max_group_size = response.parameters['max_group_size']
+                    # Set configuration
+                    self.configuration.ground_station_address = source
+                    self.configuration.ground_station_ip = response.parameters['ip']
+                    self.configuration.max_group_size = response.parameters['max_group_size']
 
-        if connection_attempts >= mesh.configuration.connection_timeout:
-            self.is_connected = False
-            raise exceptions.ConnectTimeoutException(['Could not reach ground station', connection_attempts])
+            if connection_attempts >= mesh.configuration.connection_timeout:
+                self.is_connected = False
+                raise exceptions.ConnectTimeoutException(['Could not reach ground station', connection_attempts])
 
+        else: 
+            while not self.is_connected: pass
 
     def disconnect(self):
         """Disconnect from network"""

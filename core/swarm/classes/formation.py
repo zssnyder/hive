@@ -3,6 +3,6 @@ __date__ = '3/19/19'
 
 class Formation(object):
 
-    def __init__(self):
+    def __init__(self, points):
         """Initialize a formation object"""
-        pass
+        self.points = points
