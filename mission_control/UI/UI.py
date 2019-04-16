@@ -75,6 +75,45 @@ class Handler:
             self.status5.hide()
         else:
             self.status5.show()
+
+    def theme0_activate(self, button):
+        style_provider = Gtk.CssProvider()
+
+        css = open('mission_control/UI/Default.css', 'rb') # rb needed for python 3 support
+        css_data = css.read()
+        css.close()
+
+        style_provider.load_from_data(css_data)
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), style_provider,     
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+    def theme1_activate(self, button):
+        style_provider = Gtk.CssProvider()
+
+        css = open('mission_control/UI/Light.css', 'rb') # rb needed for python 3 support
+        css_data = css.read()
+        css.close()
+
+        style_provider.load_from_data(css_data)
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), style_provider,     
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+    def theme2_activate(self, button):
+        style_provider = Gtk.CssProvider()
+
+        css = open('mission_control/UI/Dark.css', 'rb') # rb needed for python 3 support
+        css_data = css.read()
+        css.close()
+
+        style_provider.load_from_data(css_data)
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), style_provider,     
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     
     def onWindowDestroy(self, *args):
         Gtk.main_quit()
