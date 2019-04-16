@@ -42,16 +42,6 @@
     <property name="xpad">5</property>
     <property name="pixbuf">arrow.png</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-media-play</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-quit</property>
-  </object>
   <object class="GtkTextBuffer" id="statusDrone1">
     <property name="text" translatable="yes">Status: 	Idle
 X:		0
@@ -106,7 +96,7 @@ Bat:	100%</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkMenuItem" id="fileMenuItem">
+              <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_File</property>
@@ -116,13 +106,39 @@ Bat:	100%</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="startProgram">
-                        <property name="label">Launch</property>
+                      <object class="GtkImageMenuItem" id="imagemenuitem1">
+                        <property name="label">gtk-new</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="image">image1</property>
-                        <property name="use_stock">False</property>
-                        <signal name="select" handler="startProgram_select" swapped="no"/>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem2">
+                        <property name="label">gtk-open</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem3">
+                        <property name="label">gtk-save</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem4">
+                        <property name="label">gtk-save-as</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
                       </object>
                     </child>
                     <child>
@@ -132,14 +148,13 @@ Bat:	100%</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="exitProgram">
-                        <property name="label">Exit</property>
+                      <object class="GtkImageMenuItem" id="imagemenuitem5">
+                        <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="image">image2</property>
-                        <property name="use_stock">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
                         <signal name="activate" handler="onQuitClicked" swapped="no"/>
-                        <signal name="select" handler="exitProgram_select" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -147,7 +162,57 @@ Bat:	100%</property>
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="viewMenuItem">
+              <object class="GtkMenuItem" id="menuitem2">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_Edit</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu2">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem6">
+                        <property name="label">gtk-cut</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem7">
+                        <property name="label">gtk-copy</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem8">
+                        <property name="label">gtk-paste</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem9">
+                        <property name="label">gtk-delete</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_View</property>
@@ -162,7 +227,6 @@ Bat:	100%</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Default Theme</property>
                         <property name="use_underline">True</property>
-                        <signal name="select" handler="Theme0_select" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -171,7 +235,6 @@ Bat:	100%</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Light Theme</property>
                         <property name="use_underline">True</property>
-                        <signal name="select" handler="Theme1_select" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -180,7 +243,6 @@ Bat:	100%</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Dark Theme</property>
                         <property name="use_underline">True</property>
-                        <signal name="select" handler="Theme2_select" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -188,7 +250,7 @@ Bat:	100%</property>
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="helpMenuItem">
+              <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Help</property>
@@ -198,13 +260,12 @@ Bat:	100%</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="aboutMenuItem">
+                      <object class="GtkImageMenuItem" id="imagemenuitem10">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                        <signal name="select" handler="aboutMenuItem_select" swapped="no"/>
                       </object>
                     </child>
                   </object>
