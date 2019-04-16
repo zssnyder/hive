@@ -17,6 +17,7 @@ class Handler:
         self.status3 = builder.get_object("status3")
         self.status4 = builder.get_object("status4")
         self.status5 = builder.get_object("status5")
+        self.allStat = False
 
         self.source = GObject.timeout_add(1000,self.readQueue,self.logQ)
 
@@ -43,11 +44,14 @@ class Handler:
         self.status5.hide()
     
     def allDrones_clicked(self, button):
-        self.status1.show()
-        self.status2.show()
-        self.status3.show()
-        self.status4.show()
-        self.status5.show()
+        if(self.allStat):
+            self.status1.show()
+            self.status2.show()
+            self.status3.show()
+            self.status4.show()
+            self.status5.show()
+        else:
+            self.hideStatus()
 
     def drone1_clicked(self, button):     
         if(self.status1.get_visible()):
