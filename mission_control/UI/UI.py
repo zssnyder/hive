@@ -106,7 +106,7 @@ class InitializeUI():
         #For this to work the signals must have the name of the event handler in the "handler" field in glade.
         builder.connect_signals(self.hand)
         #Runs the gtk main method, which renders out the UI and waits for user input.
-        window.show_all()
+        window.show()
         self.hand.hideStatus()
 
     def startUI(self):
