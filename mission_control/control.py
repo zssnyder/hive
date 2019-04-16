@@ -19,6 +19,9 @@ class UIThread(threading.Thread):
         interface.startUI()
 
 logQueue = queue.Queue()
+droneQueue = queue.Queue()
+commandQueue = queue.Queue()
+handlerQueue = queue.Queue()
 interface = UI.InitializeUI(logQueue)
 uithread = UIThread()
 uithread.start()
