@@ -6,7 +6,7 @@ import time
 from digi.xbee import devices
 from digi.xbee.reader import XBeeMessage
 
-from hive.core.mesh import Configuration
+from hive.core.mesh import MeshConfiguration
 from hive.core.mesh import Connection
 from hive.core.mesh.classes import exceptions
 
@@ -37,7 +37,7 @@ class XBeeConnection(Connection):
     def write(self, message, dest):
         """Write to network connection"""
         
-        if str(dest) == Configuration.wildcard:
+        if str(dest) == MeshConfiguration.wildcard:
             # Get network information
             network = self.device.get_network()
 

@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s
 
 from hive.core.mesh.classes import Address
 from hive.core.mesh.classes import Node
-from hive.core.mesh.classes import Configuration
+from hive.core.mesh.classes import MeshConfiguration
 from hive.core.mesh.classes import Group
 from hive.core.mesh.classes import Packet
 # Exception module
@@ -23,9 +23,9 @@ from hive.core.mesh import commands
 
 class mesh(object):
 
-    configuration = Configuration()
+    configuration = MeshConfiguration()
 
-    def __init__(self, configuration=Configuration()):
+    def __init__(self, configuration=MeshConfiguration()):
         """Initialize mesh object"""
 
         # Set network configuration values
@@ -189,25 +189,31 @@ class mesh(object):
 
                             # Notify proper thread for execution
                             event.set()
-                    elif packet.command.parameters['request'] == True: 
-                        self.requests.appendleft(packet)
-                        
+                    else:
+                        try:
+                            if packet.command.parameters['request'] == True: 
+                                self.requests.appendleft(packet)
+                        except KeyError as ke:
+                            print('Command is not a connect request')
+                            print(ke.args)
+                        except Exception as e:
+                            print(e.args)
 
                 # Relay Packet
-                if self.node.group.controller == self.node.address:
+                if self.node.group.commander == self.node.address:
                     try:
                         self.node.try_relay(packet)
                     except Exception as e:
                         logging.debug(e.args)
 
-            elif int(time.time()) % self.configuration.group_interval == 0:
+            elif int(time.time()) % self.configuration.group_interval == 0 and not self.configuration.is_ground_station:
                 
                 # Manage network grouping
                 self.update_group()
 
     # ------- Outgoing ----------------
 
-    def try_request(self, command, dest=Address(Configuration.wildcard), timeout=5.0, responses=1):
+    def try_request(self, command, dest=Address(MeshConfiguration.wildcard), timeout=5.0, responses=1):
         """Register custom handler for event"""
         event = threading.Event()
         self.response[str(command.id)] = event
@@ -270,7 +276,7 @@ class mesh(object):
 
         connection_attempts = 0
 
-        if Configuration.is_ground_station:
+        if MeshConfiguration.is_ground_station:
             while connection_attempts < mesh.configuration.connection_timeout:
 
                 # Create a connect command 
@@ -278,25 +284,29 @@ class mesh(object):
 
                 # Broadcast connect command to network
                 try: 
-                    response, source = self.try_request(command)
+                    responses = self.try_request(command, responses=self.configuration.network_size - 1)
+
                 except exceptions.RequestTimeoutException as qte:
                     logging.debug(qte.args)
                     connection_attempts += 1
                 else:
 
-                    self.is_connected = True
+                    if connection_attempts >= mesh.configuration.connection_timeout:
+                        self.is_connected = False
+                        raise exceptions.ConnectTimeoutException(['Could not connect to nodes in network', connection_attempts])
+                    else:
 
-                    # Set configuration
-                    self.configuration.ground_station_address = source
-                    self.configuration.ground_station_ip = response.parameters['ip']
-                    self.configuration.max_group_size = response.parameters['max_group_size']
-
-            if connection_attempts >= mesh.configuration.connection_timeout:
-                self.is_connected = False
-                raise exceptions.ConnectTimeoutException(['Could not reach ground station', connection_attempts])
+                        self.is_connected = True
+                        # Return a list of tuples containing the node Address and Parameters 
+                        return [(Address(address), responses[address].parameters) for address in responses.keys() ]
 
         else: 
-            while not self.is_connected: pass
+            # Wait for GS connect command
+            while self.configuration.ground_station_address == '': 
+                pass
+
+            self.is_connected = True
+
 
     def disconnect(self):
         """Disconnect from network"""
@@ -312,21 +322,34 @@ class mesh(object):
     def update_group(self):
 
         # Clear group
-        for address in self.node.group.addresses:
-            self.node.group.remove(address)
+        self.node.group.clear()
 
         # Add all nodes nearby to group
         for address_str in self.node.network.signals.keys():
             if address_str != str(mesh.configuration.ground_station_address):
                 self.node.group.add(Address(address_str), self.node.network)
 
+        # Track number of grouping attempts
+        grouping_attempts = 0
+
         while True:
 
             # Share group with network
             group_command = commands.GroupCommand(self.node.group, self.node.network.score())
             
-            # Request responses of other groups (won't receive response from self or ground station)
-            responses = self.try_request(group_command, responses=len(self.node.network.signals) - 2)
+            try:
+                # Request responses of other groups (won't receive response from self or ground station)
+                responses = self.try_request(group_command, responses=self.configuration.network_size - 2)
+            
+            except exceptions.RequestTimeoutException as rte:
+                logging.debug("Could not request Group information from network")
+                logging.debug(rte.args)
+
+                # Try to group 3 times
+                if grouping_attempts < 3:
+                    grouping_attempts += 1
+                else:  
+                    break
 
             # Update network with other groups
             for source_str in responses.keys():
@@ -336,7 +359,7 @@ class mesh(object):
 
                 # Initialize neighbor group
                 addresses = [Address(addr) for addr in parameters['group']]
-                group = Group(parameters['id'], Address(parameters['controller']), addresses, int(parameters['size']))
+                group = Group(parameters['id'], Address(parameters['commander']), addresses, int(parameters['size']))
                 # Update neighbor group in network
                 self.node.network.add_group(source, group)
 
@@ -344,7 +367,7 @@ class mesh(object):
             before = self.node.network.groups.copy()
 
             # Merge group with other groups nearby
-            for address in self.node.group.addresses[:mesh.configuration.max_group_size + 1]:
+            for address in self.node.group.addresses[:self.configuration.max_group_size + 1]:
                 if address != self.node.address: 
                     neighbor_group = self.node.network.get_group(address)
                     self.node.group.merge(address, self.node.address, neighbor_group)
@@ -359,22 +382,22 @@ class mesh(object):
             # If grouping hasn't changed, consider the process finished
             if before == after: 
                 
-                # Set controller for group
+                # Set commander for group
                 for address in self.node.group.addresses:
                     
-                    # Current group controller is not self
-                    if str(address) in responses.keys() and str(self.node.group.controller) in responses.keys():
+                    # Current group commander is not self
+                    if str(address) in responses.keys() and str(self.node.group.commander) in responses.keys():
                         score = responses[str(address)].parameters['score']
-                        current_score = responses[str(self.node.group.controller)]
+                        current_score = responses[str(self.node.group.commander)]
                     
-                        if score > current_score: self.node.group.controller = address
+                        if score > current_score: self.node.group.commander = address
 
-                    # Current group controller is self
-                    elif str(address) in responses.keys() and address == self.node.address:
+                    # Current group commander is self
+                    elif str(address) in responses.keys() and self.node.group.commander == self.node.address:
                         score = responses[str(address)].parameters['score']
                         current_score = self.node.score()
 
-                        if score > current_score: self.node.group.controller = address
+                        if score > current_score: self.node.group.commander = address
 
                 break
                 
