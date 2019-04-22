@@ -39,15 +39,15 @@ class XBeeConnection(Connection):
         
         if str(dest) == MeshConfiguration.wildcard:
             # Get network information
-            network = self.device.get_network()
+            if not self.network.has_devices():
 
-            # Run discovery process for XBee network
-            network.start_discovery_process()
-            while network.is_discovery_running():
-                time.sleep(0.5)
+                # Run discovery process for XBee network
+                self.network.start_discovery_process()
+                while self.network.is_discovery_running():
+                    time.sleep(0.5)
 
             # Get list of remote devices
-            devices = network.get_devices()
+            devices = self.network.get_devices()
 
             # Send message to each device in network
             for remote in devices:

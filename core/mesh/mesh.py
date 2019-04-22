@@ -378,7 +378,8 @@ class mesh(object):
 
             # Check if network has updated
             after = self.node.network.groups
-            # Grouping complete?
+            
+            # If grouping hasn't changed, consider the process finished
             if before == after: 
                 
                 # Set commander for group
