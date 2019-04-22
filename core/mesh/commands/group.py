@@ -13,7 +13,7 @@ class GroupCommand(command.Command):
             'id': group.id,
             'group': group.addresses,
             'size': group.max_size,
-            'controller': group.controller,
+            'commander': group.commander,
             'score': score
         }
 

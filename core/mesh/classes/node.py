@@ -23,7 +23,7 @@ class Node(object):
         # Group
         self.group = group
         if group is None:
-            self.group = classes.Group(controller=address, addresses=[address], max_size=classes.Configuration.max_group_size)
+            self.group = classes.Group(commander=address, addresses=[address], max_size=classes.MeshConfiguration.max_group_size)
 
         # Network
         self.network = network
@@ -62,9 +62,9 @@ class Node(object):
         """
         if str(packet.route.dest_addr) == str(self.address):
             raise exceptions.RelayException(['This is the final destination node and should not be relayed', packet])
-        elif self.group.controller != self.address:
-            raise exceptions.RelayException(['Not a controller node.', packet])
-        elif packet.route.next_addr == self.address or str(packet.route.next_addr) == classes.Configuration.wildcard:
+        elif self.group.commander != self.address:
+            raise exceptions.RelayException(['Not a commander node.', packet])
+        elif packet.route.next_addr == self.address or str(packet.route.next_addr) == classes.MeshConfiguration.wildcard:
             if packet.route.dest_addr in self.group.addresses:
                 self.transmit(packet.command, dest=packet.route.dest_addr, source=packet.route.soure_addr)
             else:
@@ -73,7 +73,7 @@ class Node(object):
             raise Exception(['Unknown relay case', packet])      
 
 
-    def broadcast(self, command, source, dest=classes.Address(classes.Configuration.wildcard)):
+    def broadcast(self, command, source, dest=classes.Address(classes.MeshConfiguration.wildcard)):
         """Sends message to all nodes in network
 
         If a connection is established, sends message out to all nodes.
@@ -84,16 +84,16 @@ class Node(object):
         """
         packet = classes.Packet(command=command)
 
-        if self.group.controller == self.address: 
+        if self.group.commander == self.address: 
             packet.route = classes.Route(
-                next_addr=classes.Address(classes.Configuration.wildcard), 
+                next_addr=classes.Address(classes.MeshConfiguration.wildcard), 
                 dest_addr=dest, 
                 last_addr=self.address, 
                 source_addr=source 
             )
         else: 
             packet.route = classes.Route(
-                next_addr=self.group.controller,
+                next_addr=self.group.commander,
                 dest_addr=dest,
                 last_addr=self.address, 
                 source_addr=source

@@ -4,7 +4,7 @@ __date__ = '3/18/19'
 import logging
 from subprocess import check_output, CalledProcessError
 
-from hive.core.mesh.classes import Configuration
+from hive.core.mesh.classes import MeshConfiguration
 from hive.core.mesh import classes
 from hive.core.mesh import commands
 
@@ -18,15 +18,21 @@ class ConnectHandler(classes.Handler):
         
         * parameters - dictionary of configuration and initialization
         """
-        if parameters['GS'] == True or Configuration.is_ground_station:
+        if parameters['GS'] == True and MeshConfiguration.is_ground_station == False:
+
+            MeshConfiguration.ground_station_address = source
+            MeshConfiguration.ground_station_ip = parameters['ip']
+            MeshConfiguration.max_group_size = parameters['max_group_size']
+            MeshConfiguration.network_size = parameters['network_size']
+
             try:
                 # Check if connect request
                 if parameters['request'] == False:
                     return None
 
             except KeyError as ke:
-                print('Command is not a connect request')
-                print(ke.args)
+                logging.debug('Command is not a connect request')
+                logging.debug(ke.args)
 
             else:
                 return commands.ConnectCommand()

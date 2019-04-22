@@ -6,7 +6,7 @@ import uuid
 import ast
 import importlib
 
-from hive.core.mesh.classes.config import Configuration
+from hive.core.mesh.classes.config import MeshConfiguration
 
 class Command(object):
     """Command class defines the types of commands available to transmit"""
@@ -43,4 +43,4 @@ class Command(object):
     # ----- Overrides -------
 
     def __str__(self):
-        return Configuration.separator.join([ str(self.id), str(self.response_id), str(self.parameters) ])
+        return MeshConfiguration.separator.join([ str(self.id), str(self.response_id), str(self.parameters) ])
