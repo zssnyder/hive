@@ -1,2 +1,2 @@
-import core
-import plugins
+from . import core
+from . import peripherals

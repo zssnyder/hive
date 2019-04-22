@@ -1,2 +1,2 @@
-import mesh
-import swarm
+from hive.core import mesh
+from hive.core import swarm

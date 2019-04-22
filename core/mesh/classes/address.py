@@ -3,7 +3,7 @@ __date__ = "1/10/2019"
 
 import uuid
 
-class Address():
+class Address(object):
     """Node class describing network entity""" 
 
     def __init__(self, id=None):
@@ -11,19 +11,19 @@ class Address():
 
         self.id = id
         if id is None:
-            self.id = uuid.uuid4() # Initialize unique address
+            self.id = uuid.uuid4().hex # Initialize unique address
 
     # ----- Overrrides -------
 
     def __str__(self):
         """Overrides string representation"""
-        return id
+        return str(self.id)
 
     def __eq__(self, other):
         """Overrides equatable relation"""
         if isinstance(other, Address):
             return self.id == other.id
-        else: 
+        elif isinstance(other, str): 
             return self.id == other
         return False
     
@@ -31,6 +31,6 @@ class Address():
         """Overrides not equatable relation"""
         if isinstance(other, Address):
             return self.id != other.id
-        else: 
+        elif isinstance(other, str): 
             return self.id != other
         return False
