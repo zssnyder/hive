@@ -1,0 +1,54 @@
+/* Theme 1: Light */
+GtkDrawingArea{
+        background-color: black;
+}
+.RawData{
+        background-color: black;
+        color: green;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 600;
+}
+GtkNotebook{
+        border-color: transparent;
+}
+.BColor{
+        background-color: bisque;
+        color: black
+}
+GtkButton{
+        color: black;
+        background: lightgrey;
+        border-color: lightgrey;
+}
+GtkStatusbar{
+        background-color: bisque;
+        color: black;
+}
+GtkButton:hover{
+        background-color: beige;
+}
+GtkNotebook:hover{
+        background-color: beige;
+}
+GtkButton:active{
+        background-color: lightgreen;
+}
+GtkNotebook:active{
+        background-color: lightgreen;
+}
+GtkButton:selected{
+        background-color: lawngreen;
+}
+GtkNotebook:selected{
+        background-color: lawngreen;
+}
+GtkToggleButton:checked{
+        background: lawngreen;
+        color: black;
+}
+.Launch:hover{
+        background: greenyellow;
+}
+.Launch:checked{
+        background: lawngreen;
+}
