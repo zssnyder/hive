@@ -66,6 +66,7 @@ Zackrey Snyder</property>
           <object class="GtkButtonBox" id="aboutdialog-action_area1">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
+            <signal name="button-press-event" handler="aboutButton_clicked" swapped="no"/>
             <signal name="remove" handler="aboutdialog_remove" swapped="no"/>
           </object>
           <packing>

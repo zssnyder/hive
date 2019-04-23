@@ -176,7 +176,12 @@ class Handler:
     
     def aboutMenuItem_activate(self, button):
         aboutWindow.show()
-    
+
+    def aboutButton_clicked(self, button):
+        if button.get_label() == "Close":
+            window = builder.get_object("aboutdialog_Swarm")
+            window.destroy()
+
     def onWindowDestroy(self, *args):
         Gtk.main_quit()
 
