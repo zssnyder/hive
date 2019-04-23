@@ -444,6 +444,7 @@ Bat:	100%</property>
                     <property name="image">StartArrow</property>
                     <property name="image_position">right</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="LaunchBtn_clicked" swapped="no"/>
                     <style>
                       <class name="Launch"/>
                     </style>
@@ -490,9 +491,11 @@ Bat:	100%</property>
                 <child>
                   <object class="GtkDrawingArea" id="DroneTracking">
                     <property name="visible">True</property>
+                    <property name="app_paintable">True</property>
                     <property name="can_focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <signal name="draw" handler="onDroneTracking_draw" swapped="no"/>
                   </object>
                 </child>
                 <child type="tab">
@@ -530,6 +533,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre1_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -544,6 +548,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre2_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -558,6 +563,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre3_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -572,6 +578,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre4_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>

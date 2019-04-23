@@ -1,5 +1,5 @@
 #imports gi,gtk 3.0
-import gi,queue
+import gi,queue,threading,cairo
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -9,14 +9,18 @@ from gi.repository import GObject
 #The handler class listens for signals from the UI.
 #Each method in the class is an event handler.
 class Handler:
-    def __init__(self,q):
+    def __init__(self,lq,dq,cq,hq):
         global builder
-        self.logQ = q
+        self.logQ = lq
+        self.droneQ = dq
+        self.commandQ = cq
+        self.handlerQ = hq
         self.status1 = builder.get_object("status1")
         self.status2 = builder.get_object("status2")
         self.status3 = builder.get_object("status3")
         self.status4 = builder.get_object("status4")
         self.status5 = builder.get_object("status5")
+
         self.allStat = True
 
         self.source = GObject.timeout_add(1000,self.readQueue,self.logQ)
@@ -32,6 +36,22 @@ class Handler:
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(), style_provider,     
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+        self.initTracking()
+
+    def initTracking(self):
+        global builder
+        self.dwa = builder.get_object("DroneTracking")
+        self.dwa.queue_draw()
+
+    def onDroneTacking_draw(self, widget, event):
+        cr = widget.window.cario_create()
+        
+        cr.set_source_rgb(1,0,1)
+        cr.rectangle(20, 20, 120, 80)
+        cr.rectangle(180, 20, 80, 80)
+        
+        cr.fill()
 
     def writeToStatus(self,textbuff,sts,x,y,z,bat):
         textbuff.set_text("Status: "+sts+"\n"+"X: "+x+"\n"+"Y: "+y+"\n"+"Z: "+z+"\n"+"Bat: "+bat)
@@ -84,6 +104,21 @@ class Handler:
             self.status5.hide()
         else:
             self.status5.show()
+
+    def pre1_clicked(self, button):
+        self.logQ.put("Preset 1 selected.",True,1)
+
+    def pre2_clicked(self, button):
+        self.logQ.put("Preset 2 selected.",True,1)
+
+    def pre3_clicked(self, button):
+        self.logQ.put("Preset 3 selected.",True,1)
+
+    def pre4_clicked(self, button):
+        self.logQ.put("Preset 4 selected.",True,1)
+
+    def LaunchBtn_clicked(self, button):
+        self.logQ.put("Launch initiated.",True,1)
 
     def theme0_activate(self, button):
         style_provider = Gtk.CssProvider()
@@ -145,11 +180,14 @@ class Handler:
         return True
 #=======================================================
 class InitializeUI():
-    def __init__(self,logQueue):
+    def __init__(self,logQueue,droneQueue,commandQueue,handlerQueue):
         global builder
         global window
         self.logQ = logQueue
-        self.hand = Handler(self.logQ)
+        self.droneQ = droneQueue
+        self.commandQ = commandQueue
+        self.handQ = handlerQueue
+        self.hand = Handler(self.logQ,self.droneQ,self.commandQ,self.handQ)
         #connect signals from .glade file to event handlers.
         #For this to work the signals must have the name of the event handler in the "handler" field in glade.
         builder.connect_signals(self.hand)
@@ -162,6 +200,7 @@ class InitializeUI():
     
     def addToQueue(self,objToAdd):
         self.logQ.put(objToAdd,True,1)
+
 
 #create builder object
 builder = Gtk.Builder()
