@@ -1,1 +1,1 @@
-from classes import *
+from hive.core.swarm.classes import *

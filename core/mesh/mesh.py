@@ -12,13 +12,10 @@ from hive.core.mesh.classes import Node
 from hive.core.mesh.classes import MeshConfiguration
 from hive.core.mesh.classes import Group
 from hive.core.mesh.classes import Packet
+from hive.core.mesh.classes import Handler
 # Exception module
 from hive.core.mesh.classes import exceptions
 # Commanding modules
-from hive.core.mesh import commands
-from hive.core.mesh import handlers
-
-# Commands
 from hive.core.mesh import commands
 
 class mesh(object):
@@ -33,7 +30,7 @@ class mesh(object):
 
         # Set node configuration
         self.node = Node()
-        self.node.connection = self.configuration.plugins['connection']
+        self.node.connection = self.configuration.peripherals['connection']
 
         # Packet data structures
         self.requests = collections.deque()
@@ -45,8 +42,8 @@ class mesh(object):
         self.is_connected = False
 
         # Register network command handlers
-        self.register(commands.ConnectCommand, handlers.ConnectHandler())
-        self.register(commands.GroupCommand, handlers.GroupHandler(self.node))
+        self.register(commands.ConnectCommand, Handler(self._connect_callback, self))
+        self.register(commands.GroupCommand, Handler(self._group_callback, self))
 
         # Start operating on network
         self.stop_event = threading.Event()
@@ -214,7 +211,10 @@ class mesh(object):
     # ------- Outgoing ----------------
 
     def try_request(self, command, dest=Address(MeshConfiguration.wildcard), timeout=5.0, responses=1):
-        """Register custom handler for event"""
+        """Register custom handler for event
+        
+        = returns a dictionary of { source: command } items
+        """
         event = threading.Event()
         self.response[str(command.id)] = event
         # Set request to true
@@ -276,7 +276,7 @@ class mesh(object):
 
         connection_attempts = 0
 
-        if MeshConfiguration.is_ground_station:
+        if self.configuration.is_ground_station:
             while connection_attempts < mesh.configuration.connection_timeout:
 
                 # Create a connect command 
@@ -402,3 +402,31 @@ class mesh(object):
                 break
                 
             else: logging.debug('Grouping node...')
+
+    # ----------- Handlers -----------------
+
+    def _connect_callback(self, parameters, source):
+        """Handler for connect commands"""
+
+        if parameters['GS'] == True and self.configuration.is_ground_station == False:
+
+            MeshConfiguration.ground_station_address = source
+            MeshConfiguration.ground_station_ip = parameters['ip']
+            MeshConfiguration.max_group_size = parameters['max_group_size']
+            MeshConfiguration.network_size = parameters['network_size']
+
+            try:
+                # Check if connect request
+                if parameters['request'] == False:
+                    return None
+
+            except KeyError as ke:
+                logging.debug('Command is not a connect request')
+                logging.debug(ke.args)
+
+            else:
+                return commands.ConnectCommand()
+
+    def _group_callback(self, parameters, source): 
+        """Handler for group commands"""
+        return commands.GroupCommand(self.node.group, self.node.score())

@@ -6,7 +6,7 @@ import threading
 # import unique identifier library
 from uuid import uuid4
 
-from hive.core.mesh import MeshConfiguration
+from .config import MeshConfiguration
 
 class Group(object):
     """Group class desribing logical grouping of nodes in network"""

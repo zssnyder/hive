@@ -3,8 +3,8 @@ __date__ = '3/15/19'
 
 from subprocess import check_output, CalledProcessError
 
-from hive.core.mesh import MeshConfiguration
-from hive.core.mesh import Command
+from hive.core.mesh.classes import MeshConfiguration
+from hive.core.mesh.classes import Command
 
 
 class ConnectCommand(Command):
