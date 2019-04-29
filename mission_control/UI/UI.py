@@ -23,7 +23,7 @@ class Handler:
 
         self.allStat = True
 
-        self.source = GObject.timeout_add(1000,self.readQueue,self.logQ)
+        self.source = GObject.timeout_add(100,self.readQueue,self.logQ)
 
         style_provider = Gtk.CssProvider()
 
