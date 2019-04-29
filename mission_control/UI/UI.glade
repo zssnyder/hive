@@ -127,8 +127,8 @@ Z:		0
 Bat:	100%</property>
   </object>
   <object class="GtkApplicationWindow" id="Swarm_Control">
-    <property name="width_request">950</property>
-    <property name="height_request">850</property>
+    <property name="width_request">500</property>
+    <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Swarm Control</property>
     <property name="window_position">center</property>
@@ -261,8 +261,9 @@ Bat:	100%</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">5</property>
-            <property name="margin_right">9</property>
+            <property name="margin_right">3</property>
             <property name="margin_top">5</property>
+            <property name="margin_bottom">3</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
@@ -524,7 +525,6 @@ Bat:	100%</property>
               <object class="GtkNotebook" id="ViewSwitcher">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="margin_right">1</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
@@ -854,22 +854,6 @@ Bat:	100%</property>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_start">10</property>
-            <property name="margin_end">10</property>
-            <property name="margin_top">1</property>
-            <property name="margin_bottom">1</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">2</property>
           </packing>
         </child>
         <style>
