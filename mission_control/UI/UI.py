@@ -27,7 +27,7 @@ class Handler:
 
         style_provider = Gtk.CssProvider()
 
-        css = open('mission_control/UI/Default.css', 'rb') # rb needed for python 3 support
+        css = open('mission_control/UI/theme_config.css', 'rb') # rb needed for python 3 support
         css_data = css.read()
         css.close()
 
@@ -125,8 +125,13 @@ class Handler:
 
         css = open('mission_control/UI/Default.css', 'rb') # rb needed for python 3 support
         css_data = css.read()
+        with open('mission_control/UI/Default.css', 'r') as theme_select:
+            with open('mission_control/UI/theme_config.css', 'w') as theme_prev:
+                for line in theme_select:
+                    theme_prev.write(line)
         css.close()
-
+        theme_prev.close()
+                
         style_provider.load_from_data(css_data)
 
         Gtk.StyleContext.add_provider_for_screen(
@@ -138,7 +143,12 @@ class Handler:
 
         css = open('mission_control/UI/Light.css', 'rb') # rb needed for python 3 support
         css_data = css.read()
+        with open('mission_control/UI/Light.css', 'r') as theme_select:
+            with open('mission_control/UI/theme_config.css', 'w') as theme_prev:
+                for line in theme_select:
+                    theme_prev.write(line)
         css.close()
+        theme_prev.close()
 
         style_provider.load_from_data(css_data)
 
@@ -151,7 +161,12 @@ class Handler:
 
         css = open('mission_control/UI/Dark.css', 'rb') # rb needed for python 3 support
         css_data = css.read()
+        with open('mission_control/UI/Dark.css', 'r') as theme_select:
+            with open('mission_control/UI/theme_config.css', 'w') as theme_prev:
+                for line in theme_select:
+                    theme_prev.write(line)
         css.close()
+        theme_prev.close()
 
         style_provider.load_from_data(css_data)
 
@@ -159,6 +174,14 @@ class Handler:
             Gdk.Screen.get_default(), style_provider,     
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     
+    def aboutMenuItem_activate(self, button):
+        aboutWindow.show()
+
+    def aboutButton_clicked(self, button):
+        if button.get_label() == "Close":
+            window = builder.get_object("aboutdialog_Swarm")
+            window.destroy()
+
     def onWindowDestroy(self, *args):
         Gtk.main_quit()
 
@@ -183,6 +206,7 @@ class InitializeUI():
     def __init__(self,logQueue,droneQueue,commandQueue,handlerQueue):
         global builder
         global window
+        global aboutWindow
         self.logQ = logQueue
         self.droneQ = droneQueue
         self.commandQ = commandQueue
@@ -208,3 +232,4 @@ builder = Gtk.Builder()
 builder.add_from_file("mission_control/UI/UI.glade")
 #objects can be created to manipulate UI elements.
 window = builder.get_object("Swarm_Control")
+aboutWindow = builder.get_object("aboutdialog_Swarm")
