@@ -4,7 +4,7 @@
   <requires lib="gtk+" version="3.12"/>
   <!-- interface-css-provider-path Default.css -->
   <object class="GtkTextBuffer" id="DataLog">
-    <property name="text" translatable="yes">This is a test.</property>
+    <property name="text" translatable="yes">Log Started.</property>
   </object>
   <object class="GtkImage" id="DroneAllimage">
     <property name="visible">True</property>
@@ -41,6 +41,45 @@
     <property name="can_focus">False</property>
     <property name="xpad">5</property>
     <property name="pixbuf">arrow.png</property>
+  </object>
+  <object class="GtkAboutDialog" id="aboutdialog_Swarm">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">About Swarm</property>
+    <property name="icon">swarm-logo.svg</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">USI Swarm</property>
+    <property name="version">v1.0</property>
+    <property name="comments" translatable="yes">The Swarm program is designed to coordinate multiple drones through the use of a mesh network for use in various formations. This program is designed to demo the Swarm program's ability to instruct drones/drone groups on positions to move in order to form letters and/or shapes.</property>
+    <property name="authors">Bailey Porter
+Sean Clark
+Zackrey Snyder</property>
+    <property name="documenters">Bailey Porter
+Sean Clark
+Zackrey Snyder</property>
+    <property name="logo">swarm-logo.svg</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="aboutdialog">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="aboutdialog-action_area1">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <signal name="button-press-event" handler="aboutButton_clicked" swapped="no"/>
+            <signal name="remove" handler="aboutdialog_remove" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
@@ -88,13 +127,13 @@ Z:		0
 Bat:	100%</property>
   </object>
   <object class="GtkApplicationWindow" id="Swarm_Control">
-    <property name="width_request">950</property>
-    <property name="height_request">850</property>
+    <property name="width_request">500</property>
+    <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Swarm Control</property>
     <property name="window_position">center</property>
     <property name="hide_titlebar_when_maximized">True</property>
-    <property name="icon">drone.png</property>
+    <property name="icon">swarm-logo.svg</property>
     <signal name="destroy" handler="onWindowDestroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
@@ -222,8 +261,9 @@ Bat:	100%</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">5</property>
-            <property name="margin_right">9</property>
+            <property name="margin_right">3</property>
             <property name="margin_top">5</property>
+            <property name="margin_bottom">3</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
@@ -444,6 +484,7 @@ Bat:	100%</property>
                     <property name="image">StartArrow</property>
                     <property name="image_position">right</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="LaunchBtn_clicked" swapped="no"/>
                     <style>
                       <class name="Launch"/>
                     </style>
@@ -456,7 +497,7 @@ Bat:	100%</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="AllDrones">
+                  <object class="GtkToggleButton" id="allDrones">
                     <property name="label" translatable="yes">All Drones</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -464,6 +505,7 @@ Bat:	100%</property>
                     <property name="image">DroneAllimage</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="allDrones_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -483,15 +525,16 @@ Bat:	100%</property>
               <object class="GtkNotebook" id="ViewSwitcher">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="margin_right">1</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkDrawingArea" id="DroneTracking">
                     <property name="visible">True</property>
+                    <property name="app_paintable">True</property>
                     <property name="can_focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <signal name="draw" handler="onDroneTracking_draw" swapped="no"/>
                   </object>
                 </child>
                 <child type="tab">
@@ -529,6 +572,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre1_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -543,6 +587,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre2_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -557,6 +602,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre3_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -571,6 +617,7 @@ Bat:	100%</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="pre4_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -807,22 +854,6 @@ Bat:	100%</property>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_start">10</property>
-            <property name="margin_end">10</property>
-            <property name="margin_top">1</property>
-            <property name="margin_bottom">1</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">2</property>
           </packing>
         </child>
         <style>
