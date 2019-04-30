@@ -3,6 +3,8 @@
 __author__ = "Zack Snyder"
 __date__ = "1/10/2019"
 
+from hive.core.mesh.classes import Address
+
 class Network(object):
     """Network class describing network topology
     
@@ -45,4 +47,16 @@ class Network(object):
     # ----- Addresses ------
     def addresses(self):
         """Get value sorted list of known addresses"""
-        return [address for address, in sorted(self.signals.items(), lambda kv: kv[1])]
+        return [Address(address) for address in sorted(self.signals.items(), lambda kv: kv[1])]
+
+    def get_commanders(self):
+        """Get commander addresses"""
+
+        commanders = dict()
+
+        for address in self.addresses():
+
+            group = self.get_group(address)
+            commanders[str(group.id)] = group.commander
+
+        return commanders.items()

@@ -8,4 +8,4 @@ class Status(Enum):
     idle = 'idle'
     processing = 'processing'
     ready = 'ready'
-    running = 'running'
+    moving = 'moving'

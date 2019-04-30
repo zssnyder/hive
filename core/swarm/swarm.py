@@ -17,6 +17,7 @@ from hive.core.swarm import Offset
 from hive.core.swarm.commands import GPSCommand
 from hive.core.swarm.commands import PositionCommand
 from hive.core.swarm.commands import StatusCommand
+from hive.core.swarm.commands import ChoiceCommand
 
 logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s', )
 
@@ -55,23 +56,56 @@ class swarm(object):
 
         while not self.mesh.is_ground_station():
 
+            # Update drone state
+
             if self.drone.offset.id != self.formation.get_position_for(self.drone.address).id:
                 # New drone position is available but must be merged with other swarm
                 self.drone.status = Status.processing
+
+                # Decide which position is best
+
+                choice = self.formation.get_position_for(self.drone.address)
+                command = ChoiceCommand(choice, self.drone.get_distance_from(choice))
+
+                if self.drone.is_commander():
+
+                    commanders = [commander for commander in self.drone.network.get_commanders() if self.drone.address != commander and self.mesh.configuration.ground_station_address != commander] 
+
+                    for commander in commanders:
+                        try:
+                            response = self.mesh.try_request(command, dest=commander)
+                        except exceptions.RequestTimeoutException as rte:
+                            logging.debug('Could not request Choice command from %s: %s', str(commander), str(command))
+                        else: 
+                            # Handle response == conflicts
+                            pass
+                else:
+
+                    members = [member for member in self.drone.group.addresses if member != self.drone.address and member != self.drone.group.commander]
+
+                    for member in members:
+                        try: 
+                            response = self.mesh.try_request(command, dest=member)
+                        except exceptions.RequestTimeoutException as rte:
+                            logging.debug('Could not request Choice command from %s: %s', str(member), str(command))
+                        else:
+                            # Handle response == conflicts
+                            pass
+
+
+
             elif len(self.formation.choices.items()) < len(self.formation.offsets.items()):
                 # New drone position has been set but not every formation position has been chosen
                 self.drone.status = Status.ready
             else:
                 self.drone.status = Status.idle
             
-            elif len(self.drone.offset) == 0: 
-                self.drone.status = Status.ready
-            else:
-                self.drone.status = Status.running
+            # Update drone position
                 
-            # Call Move method here
             if self.drone.get_offset_from(*self.reference_pos.to_tuple()) != self.drone.offset and self.drone.status != Status.ready:
-                pass
+                
+                self.drone.status = Status.moving
+                # Call Move method here
     
 
     def register(self, cmd_type, handler):
