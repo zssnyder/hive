@@ -175,12 +175,9 @@ class Handler:
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     
     def aboutMenuItem_activate(self, button):
-        aboutWindow.show()
-
-    def aboutButton_clicked(self, button):
-        if button.get_label() == "Close":
-            window = builder.get_object("aboutdialog_Swarm")
-            window.destroy()
+        aboutWindow.run()
+        aboutWindow.hide()
+            
 
     def onWindowDestroy(self, *args):
         Gtk.main_quit()
