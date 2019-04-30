@@ -4,7 +4,7 @@
   <requires lib="gtk+" version="3.12"/>
   <!-- interface-css-provider-path Default.css -->
   <object class="GtkTextBuffer" id="DataLog">
-    <property name="text" translatable="yes">Log Started.</property>
+    <property name="text" translatable="yes">This is a test.</property>
   </object>
   <object class="GtkImage" id="DroneAllimage">
     <property name="visible">True</property>
@@ -90,6 +90,26 @@ Zackrey Snyder</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-quit</property>
+  </object>
+  <object class="GtkImage" id="letterI">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">letter-i-64.png</property>
+  </object>
+  <object class="GtkImage" id="letterS">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">letter-s-64.png</property>
+  </object>
+  <object class="GtkImage" id="letterU">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">letter-u-64.png</property>
+  </object>
+  <object class="GtkImage" id="logoUSI">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">USI_mascot.png</property>
   </object>
   <object class="GtkTextBuffer" id="statusDrone1">
     <property name="text" translatable="yes">Status: 	Idle
@@ -566,12 +586,13 @@ Bat:	100%</property>
                         <property name="baseline_row">3</property>
                         <child>
                           <object class="GtkButton" id="preset1">
-                            <property name="label" translatable="yes">Preset 1</property>
                             <property name="width_request">200</property>
                             <property name="height_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="image">letterU</property>
+                            <property name="image_position">top</property>
                             <signal name="clicked" handler="pre1_clicked" swapped="no"/>
                           </object>
                           <packing>
@@ -581,12 +602,12 @@ Bat:	100%</property>
                         </child>
                         <child>
                           <object class="GtkButton" id="preset2">
-                            <property name="label" translatable="yes">Preset 2</property>
                             <property name="width_request">200</property>
                             <property name="height_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="image">letterS</property>
                             <signal name="clicked" handler="pre2_clicked" swapped="no"/>
                           </object>
                           <packing>
@@ -596,12 +617,13 @@ Bat:	100%</property>
                         </child>
                         <child>
                           <object class="GtkButton" id="preset3">
-                            <property name="label" translatable="yes">Preset 3</property>
                             <property name="width_request">200</property>
                             <property name="height_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="image">letterI</property>
+                            <property name="image_position">top</property>
                             <signal name="clicked" handler="pre3_clicked" swapped="no"/>
                           </object>
                           <packing>
@@ -611,12 +633,12 @@ Bat:	100%</property>
                         </child>
                         <child>
                           <object class="GtkButton" id="preset4">
-                            <property name="label" translatable="yes">Preset 4</property>
                             <property name="width_request">200</property>
                             <property name="height_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="image">logoUSI</property>
                             <signal name="clicked" handler="pre4_clicked" swapped="no"/>
                           </object>
                           <packing>
