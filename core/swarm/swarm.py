@@ -12,6 +12,7 @@ from hive.core.swarm import SwarmConfiguration
 from hive.core.swarm import Formation
 from hive.core.swarm import Status
 from hive.core.swarm import Position
+from hive.core.swarm import Offset
 # Commands
 from hive.core.swarm.commands import GPSCommand
 from hive.core.swarm.commands import PositionCommand
@@ -55,9 +56,9 @@ class swarm(object):
         while not self.mesh.is_ground_station():
             if self.drone.get_offset_from(*self.reference_pos.to_tuple()) == self.drone.offset:
                 self.drone.status = Status.idle
-            elif len(self.reference_pos) > 1:
+            elif len(self.drone.offset) > 1:
                 self.drone.status = Status.processing
-            elif len(self.reference_pos) == 0: 
+            elif len(self.drone.offset) == 0: 
                 self.drone.status = Status.ready
             else:
                 self.drone.status = Status.running
@@ -124,9 +125,9 @@ class swarm(object):
 
         # Update current offset
         if self.drone.is_commander() and self.mesh.configuration.ground_station_address == source:
-            offset = self.drone.get_offset_from(latitude, longitude, altitude)
+            self.reference_pos = Position(latitude, longitude, altitude)
         elif not self.drone.is_commander() and self.mesh.node.group.commander == source:
-            offset = self.drone.get_offset_from(latitude, longitude, altitude)
+            self.reference_pos = Position(latitude, longitude, altitude)
 
         # WORK IN PROGRESS
 
@@ -143,12 +144,17 @@ class swarm(object):
 
             if self.drone.is_commander(): 
                 
-                offsets = parameters['off']
+                offset_dicts = parameters['off']
                 self.configuration.max_speed = parameters['vel']
                 
-                for offset in offsets:
-                    position = Position()
-                    formation = Formation(positions)
+                offsets = []
+
+                for offset_dict in offset_dicts:
+                    offset = Offset(offset_dict['x'], offset_dict['y'], offset_dict['z'])
+                    offsets.append(offset)
+
+                # Sort offsets here
+                
 
             else: return
 

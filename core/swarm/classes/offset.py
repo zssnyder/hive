@@ -30,6 +30,14 @@ class Offset(object):
         lat_r = latitude * math.pi/180
         return (self.x)/(111.32 * math.cos(lat_r) * 1000)
 
+    def to_dict(self):
+        """Convert class to dictionary"""
+        return {
+            'x': self.x,
+            'y': self.y,
+            'z': self.z
+        }
+
     # ------- Overrides ---------
 
     def __eq__(self, other):
