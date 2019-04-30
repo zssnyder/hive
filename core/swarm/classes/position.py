@@ -10,10 +10,9 @@ class Position(object):
     def __init__(self, latitude, longitude, altitude, id=None, offset=Offset()):
         """Initialize position object
         
-        * id = unique identifier for position
+        * lat, long, alt = gps coordinates
         * offset = x, y, z coordinates of position
         """
-        self.id = uuid.uuid4() if id is None else id
         self.latitude = latitude + offset.lat()
         self.longitude = longitude + offset.long(latitude)
         self.altitude = altitude + offset.z

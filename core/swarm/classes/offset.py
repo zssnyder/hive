@@ -2,6 +2,7 @@ __author__ = 'Zack Snyder'
 __date__ = '4/23/19'
 
 import math
+import uuid
 
 from geopy.geocoders import Nominatim
 from geopy import distance
@@ -10,13 +11,14 @@ class Offset(object):
 
     precision = 4
 
-    def __init__(self, x=0, y=0, z=0):
+    def __init__(self, id=None, x=0, y=0, z=0):
         """Initialize Offset 
 
         * x = x units position
         * y = y units position
         * z = z units position
         """
+        self.id = uuid.uuid4().hex if id is None else id
         self.x = x
         self.y = y
         self.z = z
@@ -33,6 +35,7 @@ class Offset(object):
     def to_dict(self):
         """Convert class to dictionary"""
         return {
+            'id': self.id,
             'x': self.x,
             'y': self.y,
             'z': self.z

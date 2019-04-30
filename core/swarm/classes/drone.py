@@ -1,6 +1,8 @@
 __author__ = 'Zack Snyder'
 __date__ = '4/22/19'
 
+import math
+
 from geopy import distance
 
 from hive.core.swarm import Offset
@@ -30,7 +32,7 @@ class Drone(object):
         return self.gps.get_coords()
 
     def get_offset_from(self, latitude, longitude, altitude):
-        """Set positional offset"""
+        """Get positional offset from lat, long, alt"""
 
         lat, long, alt = self.location()
 
@@ -39,5 +41,10 @@ class Drone(object):
         z = alt - altitude
 
         return Offset(x, y, z)
+
+    def get_distance_from(self, offset):
+        """Get distance another offset"""
+
+        return math.sqrt((offset.x - self.offset.x)^2 + (offset.y - self.offset.y)^2 + (offset.z - self.offset.z)^2)
 
     
