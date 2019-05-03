@@ -3,9 +3,12 @@ __date__ = "1/25/19"
 
 import threading
 import time
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='(%(threadName)-10s) %(message)s', )
 
 run_time = 1
-max_nodes_per_group = 4
+max_nodes_per_group = 3
 
 signal_strength_table = {
     1: {1:0,    2:5,    3:3.5,  4:4,    5:4,    6:7,    7:5.5},
@@ -69,8 +72,8 @@ def create_group(node, max_nodes):
 
         # Update global storage
         signal_strength_table[node] = current_group.description()
-        # Print resulting group
-        print(str(node) + ": " + str(current_group.nodes))
+        # print resulting group
+        logging.debug(str(node) + ": " + str(current_group.nodes))
         time.sleep(0.2)
 
         after = signal_strength_table
@@ -79,10 +82,10 @@ def create_group(node, max_nodes):
 
 for node, _ in signal_strength_table.items():
     create_group(node, max_nodes_per_group)
-    # time.sleep(0.1)
+    time.sleep(0.1)
     # break
 
 t2_end = time.time() + run_time
 while time.time() < t2_end: pass
 
-print(signal_strength_table)
+logging.debug(signal_strength_table)
