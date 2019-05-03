@@ -13,7 +13,7 @@ class ChoiceCommand(Command):
         """
         parameters = {
             'off': offset.to_dict(),
-            'distance': distance
+            'dst': distance
         }
 
         super(ChoiceCommand, self).__init__(parameters=parameters)

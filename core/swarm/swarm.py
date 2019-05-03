@@ -183,6 +183,7 @@ class swarm(object):
     def _position_callback(self, parameters, source): 
         """Handler for position commands"""
 
+        # Decide when to handle the positioning logic
         is_commander_round = self.drone.is_commander() and self.mesh.configuration.ground_station_address == source
         is_member_round = not self.drone.is_commander() and self.drone.group.commander == source
 
@@ -190,28 +191,38 @@ class swarm(object):
             
             offset_dicts = parameters['off']
             self.configuration.max_speed = parameters['vel']
+            # Initialize new formation
+            next_formation = Formation()
             
-            offsets = [Offset(offset_dict['id'], offset_dict['x'], offset_dict['y'], offset_dict['z']) for offset_dict in offset_dicts]
-            # Sort offsets here
-            offsets.sort(self.drone.get_distance_from)
-
-            self.drone.offset = offsets
+            for offset_dict in offset_dicts:
+                offset = Offset(offset_dict['id'], offset_dict['x'], offset_dict['y'], offset_dict['z'])
+                distance = self.drone.get_distance_from(offset)
+                next_formation.add_position(offset, distance)
+            # Store new formation 
+            self.formation = next_formation.copy()
+            best_choice = self.formation.get_positions()[0]
+            # Update formation choice
+            self.formation.choose_position(best_choice, self.drone.address)
 
     def _choice_callback(self, parameters, source):
         """Handler for choice commands"""
 
+        # Decide when to handle the positioning logic
         is_commander_round = self.drone.is_commander() and self.drone.network.get_group(source).commander == source
         is_member_round = not self.drone.is_commander() and self.drone.network.get_group(source).commander != source
 
         if is_commander_round or is_member_round:
 
             offset_dict = parameters['off']
-            distance = 
+            distance = parameters['dst']
+
+            self_offset = self.formation.get_position_for(self.drone.address)
+            other_offset = Offset(offset_dict['id'], offset_dict['x'], offset_dict['y'], offset_dict['z'])
 
             # Handle conflicts
-            if offset_dict['id'] == self.drone.offset[0].id:
-
-                if offset_dict
+            if self_offset.id == other_offset.id:
+                
+                if distance < self.drone.get_distance_from(self_offset): pass
 
 
 

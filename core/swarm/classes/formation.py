@@ -19,7 +19,7 @@ class Formation(object):
     def choose_position(self, offset, address):
         """Update position for address"""
         self.choices[str(address)] = offset.id
-        self.offsets[str(offset.id)] = offset
+
 
     # ----- Get Methods -----------
 
