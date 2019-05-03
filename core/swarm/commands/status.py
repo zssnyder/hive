@@ -5,14 +5,14 @@ from hive.core.mesh.classes import Command
 
 class StatusCommand(Command):
     """Shares status of drone with GS"""
-    def __init__(self, x, y, z, status):
+    def __init__(self, drone):
 
         parameters = {
-            'status': status, # Running, Processing, Idle
-            'x': x,
-            'y': y,
-            'z': z,
-            'battery': 0
+            'status': drone.status, # Running, Processing, Idle
+            'x': drone.offset.x,
+            'y': drone.offset.y,
+            'z': drone.offset.z,
+            'battery': drone.battery_level()
         }
 
         super(StatusCommand, self).__init__(parameters=parameters)

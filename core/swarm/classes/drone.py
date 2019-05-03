@@ -47,4 +47,6 @@ class Drone(object):
 
         return math.sqrt((offset.x - self.offset.x)^2 + (offset.y - self.offset.y)^2 + (offset.z - self.offset.z)^2)
 
-    
+    def battery_level(self):
+        """Get battery level for drone"""
+        return 100

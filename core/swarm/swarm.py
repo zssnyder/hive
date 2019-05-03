@@ -43,6 +43,7 @@ class swarm(object):
         self.register(GPSCommand, Handler(self._gps_callback, self))
 
         self._update_thread = None
+        self._start()
 
     # ------ Positioning Thread ------------
 
@@ -178,7 +179,7 @@ class swarm(object):
         # if self.drone.is_commander():
         #     drones = self.get_status()
 
-        return StatusCommand(self.drone.offset.x, self.drone.offset.y, self.drone.offset.z, self.drone.status)
+        return StatusCommand(self.drone)
 
     def _position_callback(self, parameters, source): 
         """Handler for position commands"""
@@ -199,7 +200,7 @@ class swarm(object):
                 distance = self.drone.get_distance_from(offset)
                 next_formation.add_position(offset, distance)
             # Store new formation 
-            self.formation = next_formation.copy()
+            self.formation = next_formation
             best_choice = self.formation.get_positions()[0]
             # Update formation choice
             self.formation.choose_position(best_choice, self.drone.address)
@@ -214,15 +215,47 @@ class swarm(object):
         if is_commander_round or is_member_round:
 
             offset_dict = parameters['off']
-            distance = parameters['dst']
+            other_distance = parameters['dst']
 
             self_offset = self.formation.get_position_for(self.drone.address)
             other_offset = Offset(offset_dict['id'], offset_dict['x'], offset_dict['y'], offset_dict['z'])
 
             # Handle conflicts
             if self_offset.id == other_offset.id:
-                
-                if distance < self.drone.get_distance_from(self_offset): pass
+
+                formation_pos = self.formation.get_positions()
+
+                # Release offset
+                if other_distance < self.drone.get_distance_from(self_offset): 
+                    
+                    # Choose offset for other drone
+                    self.formation.choose_position(other_offset, source)
+                    
+                    # Choose offset for current drone
+                    index = formation_pos.index(self_offset)
+                    new_offset = formation_pos[index + 1 % len(formation_pos)]
+                    self.formation.choose_position(new_offset, self.drone.address)
+
+                    return ChoiceCommand(new_offset, self.drone.get_distance_from(new_offset))
+
+                # Keep offset
+                elif other_distance > self.drone.get_distance_from(self_offset):
+                    
+                    return ChoiceCommand(self_offset, self.drone.get_distance_from(self_offset))
+
+                # Tiebreaker offset
+                else:    
+
+                    # Send distance of next offset in line
+                    index = formation_pos.index(self_offset)
+                    next_offset = formation_pos[index + 1 % len(formation_pos)]
+                    return ChoiceCommand(next_offset, self.drone.get_distance_from(next_offset))
+
+            else:
+                # Update formation 
+                self.formation.choose_position(other_offset, source)
+
+                return ChoiceCommand(self_offset, self.drone.get_distance_from(self_offset))
 
 
 
@@ -230,6 +263,6 @@ class swarm(object):
         """Handler for status commands"""
         
         if not self.mesh.configuration.is_ground_station:
-            return StatusCommand
+            return StatusCommand(self.drone)
         
         
